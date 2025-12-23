@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<title>Ecardify - Dashboard</title>
+	<title>Quản lý công ty - AT Digital Card</title>
 
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="/public/assets/admin/img/favicon.png">
+	<link rel="shortcut icon" href="/public/assets/icon.ico">
 
-	<!-- Fontfamily -->
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap"
-		rel="stylesheet">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
@@ -20,18 +18,193 @@
 	<!-- Feathericon CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
 
-	<!-- Pe7 CSS -->
-	<link rel="stylesheet" href="/public/assets/admin/plugins/icons/flags/flags.css">
-
 	<!-- Fontawesome CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
 	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
 
-	<!-- Datatables CSS -->
-	<link rel="stylesheet" href="/public/assets/admin/plugins/datatables/datatables.min.css">
-
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/css/style.css">
+
+	<style>
+		:root {
+			--primary-blue: #012596;
+			--accent-red: #CC0514;
+			--text-dark: #1a1a2e;
+			--text-muted: #6b7280;
+			--bg-light: #f8faff;
+			--border-color: #e5e7eb;
+			--success: #10b981;
+		}
+
+		body {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+			background: var(--bg-light);
+		}
+
+		.page-wrapper {
+			margin-left: 240px;
+			padding-top: 60px;
+			transition: all 0.3s ease;
+		}
+
+		@media (max-width: 991px) {
+			.page-wrapper {
+				margin-left: 0;
+			}
+		}
+
+		.mini-sidebar .page-wrapper {
+			margin-left: 70px;
+		}
+
+		.page-header-custom {
+			margin-bottom: 24px;
+		}
+
+		.page-header-custom h2 {
+			font-size: 24px;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.page-header-custom p {
+			color: var(--text-muted);
+			margin: 4px 0 0;
+		}
+
+		/* Search Bar */
+		.search-bar {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 24px;
+			flex-wrap: wrap;
+		}
+
+		.search-bar input {
+			flex: 1;
+			min-width: 200px;
+			max-width: 400px;
+			padding: 12px 16px;
+			border: 1.5px solid var(--border-color);
+			border-radius: 10px;
+			font-size: 14px;
+			background: white;
+		}
+
+		.search-bar input:focus {
+			outline: none;
+			border-color: var(--primary-blue);
+		}
+
+		/* Card */
+		.card-custom {
+			background: white;
+			border-radius: 16px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+			border: 1px solid var(--border-color);
+			overflow: hidden;
+		}
+
+		.card-header-custom {
+			padding: 20px 24px;
+			border-bottom: 1px solid var(--border-color);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 16px;
+		}
+
+		.card-header-custom h5 {
+			font-size: 16px;
+			font-weight: 600;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.btn-add {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 18px;
+			background: var(--primary-blue);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.btn-add:hover {
+			background: #011d78;
+			color: white;
+		}
+
+		/* Table */
+		.table-responsive {
+			padding: 0 24px 24px;
+		}
+
+		.table {
+			margin-bottom: 0;
+		}
+
+		.table thead th {
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: var(--text-muted);
+			border-bottom: 1px solid var(--border-color);
+			padding: 16px 12px;
+			white-space: nowrap;
+		}
+
+		.table tbody td {
+			padding: 16px 12px;
+			vertical-align: middle;
+			border-bottom: 1px solid var(--border-color);
+			color: var(--text-dark);
+		}
+
+		.table tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.company-logo {
+			width: 50px;
+			height: 50px;
+			object-fit: contain;
+			border-radius: 8px;
+			background: var(--bg-light);
+			padding: 4px;
+		}
+
+		.status-badge {
+			padding: 6px 12px;
+			border-radius: 20px;
+			font-size: 12px;
+			font-weight: 500;
+		}
+
+		.status-active {
+			background: rgba(16, 185, 129, 0.1);
+			color: var(--success);
+		}
+
+		.status-inactive {
+			background: rgba(204, 5, 20, 0.1);
+			color: var(--accent-red);
+		}
+
+		.btn-sm {
+			padding: 6px 12px;
+			font-size: 12px;
+			border-radius: 8px;
+		}
+	</style>
 </head>
 
 <body>
@@ -52,145 +225,104 @@
 					<div class="content container-fluid">
 
 						<!-- Page Header -->
-						<div class="page-header">
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="page-sub-header">
-										<h3 class="page-title">Company List</h3>
-										<ul class="breadcrumb">
-											<li class="breadcrumb-item"><a href="user.ejs">Company</a></li>
-											<li class="breadcrumb-item active">Page Status</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /Page Header -->
-
-						<div class="student-group-form">
-							<div class="row">
-								<div class="col-lg-3 col-md-6">
-									<div class="form-group">
-										<input type="text" class="form-control" id="searchEmployeeInput"
-											placeholder="Search by ID, Name, Phone...">
-									</div>
-								</div>
-
-
-								<div class="col-lg-2">
-									<div class="search-student-btn">
-										<button type="btn" class="btn btn-primary">Search</button>
-									</div>
-								</div>
-							</div>
+						<div class="page-header-custom">
+							<h2>Quản lý công ty</h2>
+							<p>Xem và quản lý tất cả các công ty trong hệ thống</p>
 						</div>
 
-						<div class="row">
-							<div class="col-sm-12">
+						<!-- Search Bar -->
+						<div class="search-bar">
+							<input type="text" id="searchCompanyInput" placeholder="Tìm theo tên công ty, email...">
+						</div>
 
-								<div class="card card-table comman-shadow">
-									<div class="card-body">
+						<!-- Companies Table -->
+						<div class="card-custom">
+							<div class="card-header-custom">
+								<h5><i class="fas fa-building me-2"></i>Danh sách công ty</h5>
+								<a href="/add-company" class="btn-add">
+									<i class="fas fa-plus"></i>
+									Thêm công ty
+								</a>
+							</div>
 
-										<!-- Page Header -->
-										<div class="page-header">
-											<div class="row align-items-center">
-												<div class="col">
-													<h3 class="page-title">Students</h3>
-												</div>
-												<div class="col-auto text-end float-end ms-auto download-grp">
-													<!-- <a href="/user" class="btn btn-outline-gray me-2 active"><i class="feather-list"></i></a>
-												<a href="/user-grid" class="btn btn-outline-gray me-2"><i class="feather-grid"></i></a>
-												<a href="#" class="btn btn-outline-primary me-2"><i class="fas fa-download"></i> Download</a> -->
-													<a href="/company-details" id="addCardBtn"
-														class="btn btn-primary"><i class="fas fa-plus"></i> Add
-														Company</a>
-												</div>
-											</div>
-										</div>
-										<!-- /Page Header -->
-
-										<div class="table-responsive">
-											<table class="table">
-												<thead>
-													<tr>
-														<th>S.No</th>
-														<th>Company Name</th>
-														<th>Company logo</th>
-														<th>CEO Email</th>
-														<th>Status</th>
-														<th class="text-end">Actions</th>
-													</tr>
-												</thead>
-												<!-- ... (other HTML code) ... -->
-
-												<tbody>
-													<% companies.forEach((company, index)=> { %>
-														<tr class="company-row">
-															<td>
-																<%= index + 1 %>
-															</td>
-															<td>
-																<%= company.name %>
-															</td>
-															<td>
-																<img src="<%= company.logo %>" alt="Company Logo"
-																	height="50" width="50">
-															<td>
-																<%= company.ceo.email %>
-															</td>
-															<td>
-																<%= company.status===1 ? 'Activated' : 'Deactivated' %>
-															</td>
-															<td class="text-end">
-																<div class="actions">
-																	<button
-																		onclick="updateCompanyStatus('<%= company._id %>', this.getAttribute('data-action'))"
-																		data-action='<%= company.status === 1 ? "deactivate" : "activate" %>'
-																		class="btn btn-sm btn-outline-primary me-2">
-																		<%= company.status===1 ? 'Deactivate'
-																			: 'Activate' %>
-																	</button>
-																	<form action="/delete-company/<%= company._id %>"
-																		method="POST" style="display: inline-block;"
-																		onsubmit="return confirm('WARNING: Deleting this company will also delete ALL associated employees and the CEO account. Proceed?');">
-																		<button type="submit"
-																			class="btn btn-sm btn-danger">
-																			<i class="feather-trash-2"></i> Delete
-																		</button>
-																	</form>
-																</div>
-															</td>
-														</tr>
-														<% }); %>
-												</tbody>
-
-												<!-- ... (other HTML code) ... -->
-
-											</table>
-										</div>
-									</div>
-								</div>
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>STT</th>
+											<th>Tên công ty</th>
+											<th>Logo</th>
+											<th>Email CEO</th>
+											<th>Trạng thái</th>
+											<th class="text-end">Hành động</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% companies.forEach((company, index)=> { %>
+											<tr class="company-row">
+												<td>
+													<%= index + 1 %>
+												</td>
+												<td><strong>
+														<%= company.name %>
+													</strong></td>
+												<td>
+													<img src="<%= company.logo %>" alt="Logo" class="company-logo">
+												</td>
+												<td>
+													<%= company.ceo.email %>
+												</td>
+												<td>
+													<span
+														class="status-badge <%= company.status===1 ? 'status-active' : 'status-inactive' %>">
+														<%= company.status===1 ? 'Đang hoạt động' : 'Ngừng hoạt động' %>
+													</span>
+												</td>
+												<td class="text-end">
+													<div class="d-flex gap-2 justify-content-end">
+														<button
+															onclick="updateCompanyStatus('<%= company._id %>', this.getAttribute('data-action'))"
+															data-action='<%= company.status === 1 ? "deactivate" : "activate" %>'
+															class="btn btn-sm btn-outline-primary">
+															<%= company.status===1 ? 'Tắt hoạt động' : 'Kích hoạt' %>
+														</button>
+														<form action="/delete-company/<%= company._id %>" method="POST"
+															style="display: inline-block;"
+															onsubmit="return confirm('CẢNH BÁO: Xóa công ty này sẽ xóa TẤT CẢ nhân viên và tài khoản CEO liên quan. Tiếp tục?');">
+															<button type="submit" class="btn btn-sm btn-danger">
+																<i class="fas fa-trash"></i> Xóa
+															</button>
+														</form>
+													</div>
+												</td>
+											</tr>
+											<% }); %>
+									</tbody>
+								</table>
 							</div>
 						</div>
+
 					</div>
-
-
-					<!-- Delete Modal -->
-
-
-					<!-- Footer -->
-					<!-- <footer>
-					<p>Copyright © 2022 Dreamguys.</p>					
-				</footer> -->
-					<!-- /Footer -->
 				</div>
 				<!-- /Page Wrapper -->
 
 	</div>
+	<!-- /Main Wrapper -->
+
+	<!-- jQuery -->
+	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+
+	<!-- Bootstrap Core JS -->
+	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Feather Icon JS -->
+	<script src="/public/assets/admin/js/feather.min.js"></script>
+
+	<!-- Custom JS -->
+	<script src="/public/assets/admin/js/script.js"></script>
 
 	<script>
 		function updateCompanyStatus(companyId, action) {
-			// Send a request to the server to update the company status
 			fetch(`/update-company-status/${companyId}`, {
 				method: 'PUT',
 				headers: {
@@ -200,24 +332,14 @@
 			})
 				.then(response => response.json())
 				.then(data => {
-					// Handle the response, maybe update the UI if needed
 					console.log(data);
-
-					// Assuming you want to refresh the page after updating the status
 					window.location.reload();
 				})
 				.catch(error => console.error(error));
 		}
-	</script>
 
-
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<!-- Bootstrap JavaScript -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-	<script>
 		$(document).ready(function () {
-			function filterEmployees(query) {
+			function filterCompanies(query) {
 				query = query.toLowerCase();
 				$('.company-row').hide();
 				$('.company-row').each(function () {
@@ -228,42 +350,12 @@
 				});
 			}
 
-			$('#searchEmployeeInput').on('input', function () {
+			$('#searchCompanyInput').on('input', function () {
 				var searchQuery = $(this).val();
-				filterEmployees(searchQuery);
-			});
-
-			// Additional part to show modal when "Add Card" button is clicked
-			$('#addCardBtn').click(function () {
-				$('#addCardModal').modal('show');
+				filterCompanies(searchQuery);
 			});
 		});
 	</script>
-
-
-
-
-	<!-- /Main Wrapper -->
-
-	<!-- jQuery -->
-	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
-
-
-
-	<!-- Bootstrap Core JS -->
-	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Feather Icon JS -->
-	<script src="/public/assets/admin/js/feather.min.js"></script>
-
-	<!-- Slimscroll JS -->
-	<script src="/public/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-	<!-- Datatables JS -->
-	<script src="/public/assets/admin/plugins/datatables/datatables.min.js"></script>
-
-	<!-- Custom JS -->
-	<script src="/public/assets/admin/js/script.js"></script>
 </body>
 
 </html>

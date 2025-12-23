@@ -1,75 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - AT Digital Card</title>
-    <link rel="stylesheet" href="/public/assets/admin/css/style.css">
+    <title>Đăng nhập - AT Digital Card</title>
+    <link rel="shortcut icon" href="/public/assets/icon.ico">
     <link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --primary-blue: #012596;
+            --primary-blue-dark: #011d78;
+            --primary-blue-light: #1a3db8;
+            --accent-red: #CC0514;
+            --text-dark: #1a1a2e;
+            --text-muted: #6b7280;
+            --bg-light: #f8faff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: linear-gradient(135deg, #012596 0%, #001a6a 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 50%, var(--bg-light) 100%);
+            padding: 20px;
         }
 
-        .login-box {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        .auth-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
 
-        .login-box h2 {
-            color: #333;
+        .auth-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.05),
+                0 10px 15px -3px rgba(0, 0, 0, 0.08),
+                0 20px 25px -5px rgba(0, 0, 0, 0.05);
+            padding: 40px;
+            border: 1px solid rgba(1, 37, 150, 0.08);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo {
+            max-height: 48px;
+            margin-bottom: 24px;
+        }
+
+        .auth-title {
+            font-size: 24px;
             font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            background: var(--bg-light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(1, 37, 150, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
         }
 
         .btn-primary {
-            background: #764ba2;
-            border: none;
-            padding: 0.8rem;
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 15px;
             font-weight: 600;
+            color: white;
+            background: var(--primary-blue);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 8px;
         }
 
         .btn-primary:hover {
-            background: #5a397a;
+            background: var(--primary-blue-dark);
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(1, 37, 150, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .auth-footer p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--primary-blue);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .auth-footer a:hover {
+            color: var(--primary-blue-dark);
+            text-decoration: underline;
+        }
+
+        /* Decorative accent */
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-blue-light));
+            border-radius: 0 0 4px 4px;
+        }
+
+        .auth-card {
+            position: relative;
+        }
+
+        /* Brand accent line */
+        .brand-line {
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-red));
+            border-radius: 3px;
+            margin-bottom: 24px;
+            width: 60px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+
+            .auth-title {
+                font-size: 22px;
+            }
+        }
+
+        /* Footer copyright */
+        .page-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            background: transparent;
         }
     </style>
 </head>
 
 <body>
-    <div class="login-box animate__animated animate__fadeIn">
-        <div class="text-center mb-4">
-            <img src="/public/assets/AT-Energy-Logo-1024x200.png" alt="AT Digital Card" class="img-fluid mb-3"
-                style="max-height: 50px;">
-            <p class="text-muted">Welcome back! Please login.</p>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <img src="/public/assets/AT-Energy-Logo-1024x200.png" alt="AT Energy" class="auth-logo">
+                <div class="brand-line"></div>
+                <h1 class="auth-title">Chào mừng trở lại</h1>
+                <p class="auth-subtitle">Đăng nhập để tạo danh thiếp số của bạn</p>
+            </div>
+
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input type="text" name="username" class="form-control" placeholder="Ví dụ: truongtx" required>
+                    <small style="color: var(--text-muted); font-size: 11px; margin-top: 4px; display: block;">
+                        Nhập tên đăng nhập (phần trước @at-energy.vn)
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                </div>
+
+                <button type="submit" class="btn-primary">Đăng nhập</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay</a></p>
+            </div>
         </div>
-        <form action="/login" method="POST">
-            <div class="form-group mb-3">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-            </div>
-            <div class="form-group mb-4">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-            <div class="text-center">
-                <p class="mb-0 text-muted">Don't have an account? <a href="/register"
-                        class="text-primary fw-bold">Register here</a></p>
-            </div>
-        </form>
     </div>
+
+    <footer class="page-footer">
+        © 2025 AT Energy JSC. All rights reserved.
+    </footer>
 </body>
 
 </html>

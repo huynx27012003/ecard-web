@@ -1,229 +1,319 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=0"
-    />
-    <title>Preskool - Dashboard</title>
+<html lang="vi">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="/public/assets/admin/img/favicon.png" />
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+  <title>Gói dịch vụ - AT Digital Card</title>
 
-    <!-- Fontfamily -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/public/assets/icon.ico">
 
-    <!-- Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css"
-    />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Feathericon CSS -->
-    <link
-      rel="stylesheet"
-      href="/public/assets/admin/plugins/feather/feather.css"
-    />
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
 
-    <!-- Pe7 CSS -->
-    <link
-      rel="stylesheet"
-      href="/public/assets/admin/plugins/icons/flags/flags.css"
-    />
+  <!-- Feathericon CSS -->
+  <link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
 
-    <!-- Fontawesome CSS -->
-    <link
-      rel="stylesheet"
-      href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="/public/assets/admin/plugins/fontawesome/css/all.min.css"
-    />
+  <!-- Fontawesome CSS -->
+  <link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+  <link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
 
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="/public/assets/admin/css/style.css" />
-  </head>
-  <body>
-    <!-- Main Wrapper -->
-    <div class="main-wrapper">
-      <!-- Header -->
-      <%- include('header.ejs'); %>
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/public/assets/admin/css/style.css">
+
+  <style>
+    :root {
+      --primary-blue: #012596;
+      --accent-red: #CC0514;
+      --text-dark: #1a1a2e;
+      --text-muted: #6b7280;
+      --bg-light: #f8faff;
+      --border-color: #e5e7eb;
+      --success: #10b981;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      background: var(--bg-light);
+    }
+
+    .page-wrapper {
+      margin-left: 240px;
+      padding-top: 60px;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 991px) {
+      .page-wrapper {
+        margin-left: 0;
+      }
+    }
+
+    .mini-sidebar .page-wrapper {
+      margin-left: 70px;
+    }
+
+    .page-header-custom {
+      margin-bottom: 24px;
+    }
+
+    .page-header-custom h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .page-header-custom p {
+      color: var(--text-muted);
+      margin: 4px 0 0;
+    }
+
+    /* Card */
+    .card-custom {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .card-header-custom {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .card-header-custom h5 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .btn-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn-add:hover {
+      background: #011d78;
+      color: white;
+    }
+
+    /* Table */
+    .table-responsive {
+      padding: 0 24px 24px;
+    }
+
+    .table {
+      margin-bottom: 0;
+    }
+
+    .table thead th {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 12px;
+      white-space: nowrap;
+    }
+
+    .table tbody td {
+      padding: 16px 12px;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-dark);
+    }
+
+    .table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .price-tag {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary-blue);
+    }
+
+    .price-currency {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .feature-list li {
+      padding: 4px 0;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-list li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .btn-edit {
+      background: #f59e0b !important;
+      border-color: #f59e0b !important;
+      color: white !important;
+    }
+
+    .btn-delete {
+      background: var(--accent-red) !important;
+      border-color: var(--accent-red) !important;
+      color: white !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Main Wrapper -->
+  <div class="main-wrapper">
+    <!-- Header -->
+    <%- include('header.ejs'); %>
       <!-- /Header -->
 
       <!-- Sidebar -->
       <%- include('sidebar.ejs'); %>
-      <!-- /Sidebar -->
+        <!-- /Sidebar -->
 
-      <!-- Page Wrapper -->
-      <div class="page-wrapper">
-        <div class="content container-fluid">
-          <!-- Page Header -->
-          <div class="page-header">
-            <div class="row align-items-center">
-              <div class="col">
-                <h3 class="page-title">subscription plan</h3>
-                <ul class="breadcrumb">
-                  <li class="breadcrumb-item">
-                    <a href="index.ejs">Dashboard</a>
-                  </li>
-                  <li class="breadcrumb-item active">subscription plan</li>
-                </ul>
-              </div>
+        <!-- Page Wrapper -->
+        <div class="page-wrapper">
+          <div class="content container-fluid">
+
+            <!-- Page Header -->
+            <div class="page-header-custom">
+              <h2>Gói dịch vụ</h2>
+              <p>Quản lý các gói dịch vụ và tính năng đi kèm</p>
             </div>
-          </div>
-          <!-- /Page Header -->
 
-          <div class="student-group-form">
-            <!-- <div class="row">
-              <div class="col-lg-3 col-md-6">
-                <div class="form-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Search by ID or NAME"
-                  />
-                </div>
+            <!-- Subscription Plans Table -->
+            <div class="card-custom">
+              <div class="card-header-custom">
+                <h5><i class="fas fa-credit-card me-2"></i>Danh sách gói dịch vụ</h5>
+                <a href="/add-subscription" class="btn-add">
+                  <i class="fas fa-plus"></i>
+                  Thêm gói mới
+                </a>
               </div>
-              <div class="col-lg-3 col-md-6">  
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Search by Name ...">
-								</div>
-							</div>
-							<div class="col-lg-4 col-md-6">  
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Search by Phone ...">
-								</div>
-							</div>-->
-              <!-- <div class="col-lg-2">
-                <div class="search-student-btn">
-                  <button type="btn" class="btn btn-primary">Search</button>
-                </div>
-              </div> -->
-            </div> 
-          </div>
 
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="card card-table">
-                <div class="card-body">
-                  <!-- Page Header -->
-                  <div class="page-header">
-                    <div class="row align-items-center">
-                      <div class="col">
-                        <h3 class="page-title">subscription plan</h3>
-                      </div>
-                      <div
-                        class="col-auto text-end float-end ms-auto download-grp"
-                      >
-                        <a
-                          href="/teachers"
-                          class="btn btn-outline-gray me-2 active"
-                          ><i class="feather-list"></i
-                        ></a>
-                        <a
-                          href="teachers-grid.ejs"
-                          class="btn btn-outline-gray me-2"
-                          ><i class="feather-grid"></i
-                        ></a>
-                        <!--<a href="#" class="btn btn-outline-primary me-2"><i class="fas fa-download"></i> Download</a>-->
-                        <a href="/add-subscription" class="btn btn-primary"
-                          ><i class="fas fa-plus"></i
-                        ></a>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- /Page Header -->
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>STT</th>
+                      <th>Tên gói</th>
+                      <th>Tính năng</th>
+                      <th>Giá</th>
+                      <th class="text-end">Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% subscriptionPlans.forEach((plan, index)=> { %>
+                      <tr>
+                        <td>
+                          <%= index + 1 %>
+                        </td>
+                        <td><strong>
+                            <%= plan.name %>
+                          </strong></td>
+                        <td>
+                          <ul class="feature-list">
+                            <% if (plan.features && Array.isArray(plan.features)) { %>
+                              <% plan.features.forEach(feature=> { %>
+                                <li>
+                                  <%= feature %>
+                                </li>
+                                <% }); %>
+                                  <% } else { %>
+                                    <li class="text-muted">Chưa có tính năng</li>
+                                    <% } %>
+                          </ul>
+                        </td>
+                        <td>
+                          <span class="price-tag">
+                            <%= plan.price.toLocaleString('vi-VN') %>
+                              <span class="price-currency">VND</span>
+                          </span>
+                        </td>
+                        <td class="text-end">
+                          <div class="d-flex gap-2 justify-content-end">
+                            <a href="/delete/<%= plan._id %>" class="btn btn-sm btn-delete"
+                              onclick="return confirm('Bạn có chắc muốn xóa gói dịch vụ này?');">
+                              <i class="fas fa-trash"></i>
+                            </a>
+                            <a href="/edit-subscription/<%= plan._id %>" class="btn btn-sm btn-edit">
+                              <i class="fas fa-edit"></i>
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <% }); %>
 
-                  <div class="table-responsive">
-                    <table
-                      class="table border-0 star-student table-hover table-center mb-0 datatable table-striped"
-                    >
-                      <thead class="student-thread">
-                        <tr>
-                          <!-- <th>
-														<div class="form-check check-tables">
-															<input class="form-check-input" type="number"  value="">
-														</div>
-													</th> -->
-                          <th>S.No</th>
-                          <th>Plan Name</th>
-                          <th>Features</th>
-                          <th>Price</th>
-
-                          <th class="text-end">Delete/Edit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% subscriptionPlans.forEach((plan, index) => { %>
+                        <% if (subscriptionPlans.length===0) { %>
                           <tr>
-                            <td><%= index + 1 %></td>
-                            <td><%= plan.name %></td>
-                            <td>
-                              <ul>
-                                <% if (plan.features && Array.isArray(plan.features)) { %>
-                                  <% plan.features.forEach(feature => { %>
-                                    <li><%= feature %></li>
-                                  <% }); %>
-                                <% } else { %>
-                                  <li>No features available</li>
-                                <% } %>
-                              </ul>
-                            </td>
-                            <td>$<%= plan.price.toFixed(2) %></td>
-                            <td class="text-end">
-                              <div class="actions">
-                                <a href="/delete/<%= plan._id %>" class="btn btn-sm bg-danger-light me-2">
-                                  <i class="feather-trash-2"></i> 
-                                </a>
-                                <a href="/edit-subscription/<%= plan._id %>" class="btn btn-sm bg-danger-light">
-                                  <i class="feather-edit"></i>
-                                </a>
-                              </div>
+                            <td colspan="5" class="text-center text-muted py-4">
+                              Chưa có gói dịch vụ nào. Bấm "Thêm gói mới" để bắt đầu.
                             </td>
                           </tr>
-                        <% }); %>
-
-                        
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+                          <% } %>
+                  </tbody>
+                </table>
               </div>
             </div>
+
           </div>
         </div>
+        <!-- /Page Wrapper -->
+  </div>
+  <!-- /Main Wrapper -->
 
-        <!-- Footer -->
-        <!--<footer>
-					<p>Copyright © 2022 Dreamguys.</p>					
-				</footer>-->
-        <!-- /Footer -->
-      </div>
-      <!-- /Page Wrapper -->
-    </div>
-    <!-- /Main Wrapper -->
+  <!-- jQuery -->
+  <script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
 
-    <!-- jQuery -->
-    <script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap Core JS -->
+  <script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap Core JS -->
-    <script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Feather Icon JS -->
+  <script src="/public/assets/admin/js/feather.min.js"></script>
 
-    <!-- Feather Icon JS -->
-    <script src="/public/assets/admin/js/feather.min.js"></script>
+  <!-- Custom JS -->
+  <script src="/public/assets/admin/js/script.js"></script>
+</body>
 
-    <!-- Slimscroll JS -->
-    <script src="/public/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-    <!-- Datatables JS -->
-    <script src="/public/assets/admin/plugins/datatables/datatables.min.js"></script>
-
-    <!-- Custom JS -->
-    <script src="/public/assets/admin/js/script.js"></script>
-  </body>
 </html>

@@ -190,6 +190,12 @@ app.get('/register', async (req, res) => {
 app.post('/register', async (req, res) => {
   try {
     const { username, email, password, number } = req.body;
+
+    // Validate email domain - only allow @at-energy.vn
+    if (!email.endsWith('@at-energy.vn')) {
+      return res.status(400).send("Chỉ chấp nhận email có đuôi @at-energy.vn. Vui lòng sử dụng email công ty.");
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       username,
@@ -208,8 +214,17 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const { username, password } = req.body;
+
+    // Try to find user by username first, then by email
+    let user = await User.findOne({ username });
+
+    // If not found by username, try with @at-energy.vn email
+    if (!user) {
+      const emailToCheck = username.includes('@') ? username : `${username}@at-energy.vn`;
+      user = await User.findOne({ email: emailToCheck });
+    }
+
     if (user && await bcrypt.compare(password, user.password)) {
       req.session.userId = user._id;
 
@@ -222,7 +237,7 @@ app.post('/login', async (req, res) => {
 
       res.redirect('/create-card');
     } else {
-      res.status(401).send("Invalid email or password");
+      res.status(401).send("Tên đăng nhập hoặc mật khẩu không đúng");
     }
   } catch (error) {
     console.error(error);
@@ -333,6 +348,66 @@ app.listen(3000, function () {
   console.log('Server started at port 3000');
 })
 
+// ============ TEMPLATE MANAGEMENT ROUTES ============
+
+// Add new template (Admin only)
+app.post('/add-template', isAdmin, upload.single('templateImage'), async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    // Tạo một cardType mặc định nếu chưa có
+    let defaultCardType = await cardt.findOne();
+    if (!defaultCardType) {
+      defaultCardType = new cardt({ name: 'Business Card' });
+      await defaultCardType.save();
+    }
+
+    const newTemplate = new temp({
+      name: name || 'New Template',
+      cardType: defaultCardType._id,
+      fields: [
+        { name: 'Name', type: 'text' },
+        { name: 'Role', type: 'text' },
+        { name: 'Email', type: 'email' },
+        { name: 'Phone', type: 'text' },
+        { name: 'Address', type: 'text' },
+        { name: 'Company', type: 'text' },
+        { name: 'Website', type: 'text' }
+      ]
+    });
+
+    // Nếu có upload hình ảnh
+    if (req.file) {
+      newTemplate.img = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      };
+    }
+
+    await newTemplate.save();
+    res.redirect('/create-card');
+  } catch (error) {
+    console.error('Error adding template:', error);
+    res.status(500).send('Lỗi khi tạo mẫu mới');
+  }
+});
+
+// Edit/Rename template (Admin only)
+app.post('/edit-template', isAdmin, async (req, res) => {
+  try {
+    const { templateId, name } = req.body;
+
+    await temp.findByIdAndUpdate(templateId, { name });
+
+    res.redirect('/create-card');
+  } catch (error) {
+    console.error('Error editing template:', error);
+    res.status(500).send('Lỗi khi chỉnh sửa mẫu');
+  }
+});
+
+// ============ END TEMPLATE MANAGEMENT ============
+
 
 
 
@@ -405,7 +480,35 @@ app.post('/admin', async (req, res) => {
 });
 
 app.get('/index', isAdmin, async (req, res) => {
-  res.render('admin/index');
+  try {
+    // Fetch real data for dashboard
+    const userCount = await User.countDocuments();
+    const templateCount = await temp.countDocuments();
+    const cardCount = await BusinessCard.countDocuments();
+    const companyCount = await mcompany.countDocuments();
+
+    // Get recent users (last 5)
+    const recentUsers = await User.find()
+      .sort({ _id: -1 })
+      .limit(5)
+      .select('username email number createdAt');
+
+    res.render('admin/index', {
+      stats: {
+        users: userCount,
+        templates: templateCount,
+        cards: cardCount,
+        companies: companyCount
+      },
+      recentUsers
+    });
+  } catch (error) {
+    console.error('Dashboard error:', error);
+    res.render('admin/index', {
+      stats: { users: 0, templates: 0, cards: 0, companies: 0 },
+      recentUsers: []
+    });
+  }
 });
 
 

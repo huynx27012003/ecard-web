@@ -1,69 +1,44 @@
 <div class="header">
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" id="sidebar_toggle">
+        <i class="fas fa-bars"></i>
+    </button>
 
     <!-- Logo -->
     <div class="header-left">
         <a href="/index" class="logo">
-            <img src="/public/assets/AT-Energy-Logo-1024x200.png" alt="Logo" width="180" height="35"
-                style="object-fit: contain;">
+            <img src="/public/assets/AT-Energy-Logo-1024x200.png" alt="Logo" height="35" style="object-fit: contain;">
         </a>
-        <a href="index.html" class="logo logo-small">
-            <img src="/public/assets/AT-Energy-Logo-1024x200.png" alt="Logo" width="30" height="30"
-                style="object-fit: contain;">
+        <a href="/index" class="logo logo-small">
+            <img src="/public/assets/icon.ico" alt="Logo" width="30" height="30" style="object-fit: contain;">
         </a>
     </div>
     <!-- /Logo -->
 
-    <div class="menu-toggle">
-        <a href="javascript:void(0);" id="toggle_btn">
-            <i class="fas fa-bars"></i>
-        </a>
-    </div>
-
-    <!-- Mobile Menu Toggle -->
-    <a class="mobile_btn" id="mobile_btn">
-        <i class="fas fa-bars"></i>
-    </a>
-    <!-- /Mobile Menu Toggle -->
-
     <!-- Header Right Menu -->
     <ul class="nav user-menu">
-
-        <!-- Notifications -->
-        <li class="nav-item dropdown noti-dropdown me-2">
-
-        </li>
-        <!-- /Notifications -->
-        <!-- <li class="nav-item zoom-screen me-2">
-            <a href="#" class="nav-link header-nav-list">
-              <img
-                src="/public/assets/admin/img/icons/header-icon-04.svg"
-                alt=""
-              />
-            </a>
-          </li> -->
-
         <!-- User Menu -->
         <li class="nav-item dropdown has-arrow new-user-menus">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <span class="user-img">
-                    <img class="rounded-circle" src="/public/assets/admin/img/profiles/avatar-01.jpg" width="31"
-                        alt="User">
+                    <div class="user-avatar-header">
+                        <%= loggedInUser ? loggedInUser.username.charAt(0).toUpperCase() : 'G' %>
+                    </div>
                     <div class="user-text">
                         <h6>
                             <%= loggedInUser ? loggedInUser.username : 'Guest' %>
                         </h6>
                         <p class="text-muted mb-0">
-                            <%= loggedInUser ? (loggedInUser.role ? loggedInUser.role.charAt(0).toUpperCase() +
-                                loggedInUser.role.slice(1) : 'Member' ) : 'Please Login' %>
+                            <%= loggedInUser ? (loggedInUser.role==='admin' ? 'Quản trị viên' :
+                                loggedInUser.role==='ceo' ? 'Giám đốc' : 'Thành viên' ) : 'Khách' %>
                         </p>
                     </div>
                 </span>
             </a>
             <div class="dropdown-menu">
                 <div class="user-header">
-                    <div class="avatar avatar-sm">
-                        <img src="/public/assets/admin/img/profiles/avatar-01.jpg" alt="User Image"
-                            class="avatar-img rounded-circle">
+                    <div class="user-avatar-header large">
+                        <%= loggedInUser ? loggedInUser.username.charAt(0).toUpperCase() : 'G' %>
                     </div>
                     <div class="user-text">
                         <h6>
@@ -74,11 +49,245 @@
                         </p>
                     </div>
                 </div>
-                <a class="dropdown-item" href="/logout">Logout</a>
+                <a class="dropdown-item" href="/my-card">
+                    <i class="fas fa-id-card me-2"></i> Danh thiếp của tôi
+                </a>
+                <a class="dropdown-item" href="/logout">
+                    <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                </a>
             </div>
         </li>
         <!-- /User Menu -->
-
     </ul>
     <!-- /Header Right Menu -->
 </div>
+
+<style>
+    .header {
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        height: 60px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        width: 220px;
+        flex-shrink: 0;
+    }
+
+    .header-left .logo {
+        display: block;
+    }
+
+    .header-left .logo-small {
+        display: none;
+    }
+
+    .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #f8faff;
+        color: #1a1a2e;
+        font-size: 18px;
+        border: 1px solid #e5e7eb;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-left: 0;
+    }
+
+    .sidebar-toggle:hover {
+        background: #012596;
+        color: #fff;
+        border-color: #012596;
+    }
+
+    .user-menu {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        list-style: none;
+        padding: 0;
+        margin-bottom: 0;
+    }
+
+    .user-menu .nav-item {
+        list-style: none;
+    }
+
+    .user-menu .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        color: #1a1a2e;
+        text-decoration: none;
+    }
+
+    .user-img {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .user-avatar-header {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #012596, #1a3db8);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .user-avatar-header.large {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+    }
+
+    .user-text {
+        text-align: left;
+    }
+
+    .user-text h6 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin: 0;
+    }
+
+    .user-text p {
+        font-size: 12px;
+        margin: 0;
+    }
+
+    .dropdown-menu {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        padding: 0;
+        overflow: hidden;
+        min-width: 220px;
+    }
+
+    .user-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        background: #f8faff;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .dropdown-item {
+        padding: 12px 16px;
+        font-size: 14px;
+        color: #1a1a2e;
+        display: flex;
+        align-items: center;
+    }
+
+    .dropdown-item:hover {
+        background: #f8faff;
+        color: #012596;
+    }
+
+    .dropdown-item i {
+        color: #6b7280;
+    }
+
+    .dropdown-item:hover i {
+        color: #012596;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .header-left {
+            width: auto;
+        }
+
+        .header-left .logo {
+            display: none;
+        }
+
+        .header-left .logo-small {
+            display: block;
+        }
+    }
+
+    @media (max-width: 575px) {
+        .user-text {
+            display: none;
+        }
+    }
+
+    /* Mini sidebar adjustments */
+    .mini-sidebar .header-left {
+        width: 50px;
+    }
+
+    .mini-sidebar .header-left .logo {
+        display: none;
+    }
+
+    .mini-sidebar .header-left .logo-small {
+        display: block;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarToggle = document.getElementById('sidebar_toggle');
+        const sidebar = document.getElementById('sidebar');
+        const body = document.body;
+
+        if (sidebarToggle && sidebar) {
+            sidebarToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Check if mobile or desktop
+                if (window.innerWidth <= 991) {
+                    // Mobile: toggle sidebar visibility
+                    sidebar.classList.toggle('active');
+                } else {
+                    // Desktop: toggle mini-sidebar
+                    body.classList.toggle('mini-sidebar');
+
+                    // Save preference to localStorage
+                    localStorage.setItem('sidebarMini', body.classList.contains('mini-sidebar'));
+                }
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function (e) {
+                if (window.innerWidth <= 991) {
+                    if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            });
+
+            // Restore sidebar state from localStorage
+            const savedMiniState = localStorage.getItem('sidebarMini');
+            if (savedMiniState === 'true' && window.innerWidth > 991) {
+                body.classList.add('mini-sidebar');
+            }
+        }
+    });
+</script>

@@ -1,441 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title>Preskool - Dashboard</title>
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<!-- Favicon -->
-        <link rel="shortcut icon" href="/public/assets/admin/img/favicon2.ico">
-		
-		<!-- Fontfamily -->
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet">
-		
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
-		
-		<!-- Feathericon CSS -->
-        <link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
-		
-		<!-- Pe7 CSS -->
-		<link rel="stylesheet" href="/public/assets/admin/plugins/icons/flags/flags.css">
-		
-		<!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
-		<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="/public/assets/admin/css/style.css">
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper">
-		
-			<!-- Header -->
-            <%- include('header.ejs') %>
+<html lang="vi">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>Dashboard - AT Digital Card</title>
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/public/assets/icon.ico">
+
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
+
+	<!-- Feathericon CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
+
+	<!-- Fontawesome CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
+
+	<!-- Main CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/css/style.css">
+
+	<style>
+		:root {
+			--primary-blue: #012596;
+			--primary-blue-dark: #011d78;
+			--accent-red: #CC0514;
+			--text-dark: #1a1a2e;
+			--text-muted: #6b7280;
+			--bg-light: #f8faff;
+			--border-color: #e5e7eb;
+			--success: #10b981;
+		}
+
+		body {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+			background: var(--bg-light);
+		}
+
+		.page-wrapper {
+			margin-left: 240px;
+			padding-top: 70px;
+			min-height: 100vh;
+			transition: all 0.3s ease;
+		}
+
+		@media (max-width: 991px) {
+			.page-wrapper {
+				margin-left: 0;
+			}
+		}
+
+		/* Stats Cards */
+		.stats-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 20px;
+			margin-bottom: 30px;
+		}
+
+		.stat-card {
+			background: white;
+			border-radius: 16px;
+			padding: 24px;
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+			border: 1px solid var(--border-color);
+			transition: all 0.3s ease;
+		}
+
+		.stat-card:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+		}
+
+		.stat-icon {
+			width: 56px;
+			height: 56px;
+			border-radius: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 24px;
+		}
+
+		.stat-icon.users {
+			background: rgba(1, 37, 150, 0.1);
+			color: var(--primary-blue);
+		}
+
+		.stat-icon.templates {
+			background: rgba(16, 185, 129, 0.1);
+			color: var(--success);
+		}
+
+		.stat-icon.cards {
+			background: rgba(245, 158, 11, 0.1);
+			color: #f59e0b;
+		}
+
+		.stat-icon.companies {
+			background: rgba(204, 5, 20, 0.1);
+			color: var(--accent-red);
+		}
+
+		.stat-info h3 {
+			font-size: 28px;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.stat-info p {
+			font-size: 13px;
+			color: var(--text-muted);
+			margin: 0;
+		}
+
+		/* Quick Actions */
+		.quick-actions {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+			gap: 16px;
+			margin-bottom: 30px;
+		}
+
+		.action-btn {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 16px 20px;
+			background: white;
+			border: 1px solid var(--border-color);
+			border-radius: 12px;
+			text-decoration: none;
+			color: var(--text-dark);
+			font-weight: 500;
+			transition: all 0.2s ease;
+		}
+
+		.action-btn:hover {
+			border-color: var(--primary-blue);
+			color: var(--primary-blue);
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(1, 37, 150, 0.1);
+		}
+
+		.action-btn i {
+			font-size: 18px;
+			color: var(--primary-blue);
+		}
+
+		/* Recent Users Table */
+		.card-custom {
+			background: white;
+			border-radius: 16px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+			border: 1px solid var(--border-color);
+			overflow: hidden;
+		}
+
+		.card-header-custom {
+			padding: 20px 24px;
+			border-bottom: 1px solid var(--border-color);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		.card-header-custom h5 {
+			font-size: 16px;
+			font-weight: 600;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.table-responsive {
+			padding: 0 24px 24px;
+		}
+
+		.table {
+			margin-bottom: 0;
+		}
+
+		.table thead th {
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: var(--text-muted);
+			border-bottom: 1px solid var(--border-color);
+			padding: 16px 12px;
+		}
+
+		.table tbody td {
+			padding: 16px 12px;
+			vertical-align: middle;
+			border-bottom: 1px solid var(--border-color);
+			color: var(--text-dark);
+		}
+
+		.table tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.user-avatar-sm {
+			width: 36px;
+			height: 36px;
+			border-radius: 10px;
+			background: var(--primary-blue);
+			color: white;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 600;
+			font-size: 14px;
+			margin-right: 12px;
+		}
+
+		/* Welcome Section */
+		.welcome-section {
+			margin-bottom: 30px;
+		}
+
+		.welcome-section h2 {
+			font-size: 24px;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin-bottom: 4px;
+		}
+
+		.welcome-section p {
+			color: var(--text-muted);
+			margin: 0;
+		}
+
+		/* Footer */
+		.page-footer {
+			position: fixed;
+			bottom: 16px;
+			right: 24px;
+			font-size: 12px;
+			color: var(--text-muted);
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+
+		<!-- Header -->
+		<%- include('header.ejs') %>
 			<!-- /Header -->
-			
+
 			<!-- Sidebar -->
-				<%- include('sidebar.ejs') %>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-			
-                <div class="content container-fluid">
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="page-sub-header">
-									<h3 class="page-title">Welcome Admin!</h3>
-									<ul class="breadcrumb">
-										<li class="breadcrumb-item"><a href="/index">Home</a></li>
-										<li class="breadcrumb-item active">Admin</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
+			<%- include('sidebar.ejs') %>
+				<!-- /Sidebar -->
 
-					<!-- Overview Section -->
-					<div class="row">
-						<div class="col-xl-3 col-sm-6 col-12 d-flex">
-							<div class="card bg-comman w-100">
-								<div class="card-body">
-									<div class="db-widgets d-flex justify-content-between align-items-center">
-										<div class="db-info">
-											<h6>Users </h6>
-											<h3>40000</h3>
-										</div>	
-										<div class="db-icon">
-											<img  src="/public/assets/admin/img/icons/dash-icon-user.png"  alt="Dashboard Icon">
-										</div>
-									</div>
-								</div>
-							</div>
+				<!-- Page Wrapper -->
+				<div class="page-wrapper">
+					<div class="content container-fluid">
+
+						<!-- Welcome Section -->
+						<div class="welcome-section">
+							<h2>Xin chào, <%= loggedInUser ? loggedInUser.username : 'Admin' %>! 👋</h2>
+							<p>Chào mừng bạn đến với bảng điều khiển AT Digital Card</p>
 						</div>
 
-						<div class="col-xl-3 col-sm-6 col-12 d-flex">
-							<div class="card bg-comman w-100">
-								<div class="card-body">
-									<div class="db-widgets d-flex justify-content-between align-items-center">
-										<div class="db-info">
-											<h6>Templates</h6>
-											<h3>50+</h3>
-										</div>		
-										<div class="db-icon">
-											<img  src="/public/assets/admin/img/icons/dash-icon-template.png"  alt="Dashboard Icon">
-										</div>	
-									</div>
+						<!-- Stats Grid -->
+						<div class="stats-grid">
+							<div class="stat-card">
+								<div class="stat-icon users">
+									<i class="fas fa-users"></i>
+								</div>
+								<div class="stat-info">
+									<h3>
+										<%= typeof stats !=='undefined' ? stats.users : 0 %>
+									</h3>
+									<p>Người dùng</p>
 								</div>
 							</div>
-						</div>
 
-						<div class="col-xl-3 col-sm-6 col-12 d-flex">
-							<div class="card bg-comman w-100">
-								<div class="card-body">
-									<div class="db-widgets d-flex justify-content-between align-items-center">
-										<div class="db-info">
-											<h6>Card Types</h6>
-											<h3>30+</h3>
-										</div>
-										<div class="db-icon">
-											<img  src="/public/assets/admin/img/icons/dash-icon-cardtype.png"  alt="Dashboard Icon">
-										</div>
-									</div>
+							<div class="stat-card">
+								<div class="stat-icon templates">
+									<i class="fas fa-palette"></i>
+								</div>
+								<div class="stat-info">
+									<h3>
+										<%= typeof stats !=='undefined' ? stats.templates : 0 %>
+									</h3>
+									<p>Mẫu thiết kế</p>
+								</div>
+							</div>
+
+							<div class="stat-card">
+								<div class="stat-icon cards">
+									<i class="fas fa-id-card"></i>
+								</div>
+								<div class="stat-info">
+									<h3>
+										<%= typeof stats !=='undefined' ? stats.cards : 0 %>
+									</h3>
+									<p>Danh thiếp đã tạo</p>
+								</div>
+							</div>
+
+							<div class="stat-card">
+								<div class="stat-icon companies">
+									<i class="fas fa-building"></i>
+								</div>
+								<div class="stat-info">
+									<h3>
+										<%= typeof stats !=='undefined' ? stats.companies : 0 %>
+									</h3>
+									<p>Công ty</p>
 								</div>
 							</div>
 						</div>
 
-						<div class="col-xl-3 col-sm-6 col-12 d-flex">
-							<div class="card bg-comman w-100">
-								<div class="card-body">
-									<div class="db-widgets d-flex justify-content-between align-items-center">
-										<div class="db-info">
-											<h6>Revenue</h6>
-											<h3>$505</h3>
-										</div>	
-										<div class="db-icon">
-											<img  src="/public/assets/admin/img/icons/dash-icon-revenue.png"  alt="Dashboard Icon">
-										</div>	
-									</div>
-								</div>
-							</div>
+						<!-- Quick Actions -->
+						<div class="quick-actions">
+							<a href="/create-card" class="action-btn">
+								<i class="fas fa-plus-circle"></i>
+								Tạo danh thiếp mới
+							</a>
+							<a href="/user" class="action-btn">
+								<i class="fas fa-user-cog"></i>
+								Quản lý người dùng
+							</a>
+							<a href="/employee-list" class="action-btn">
+								<i class="fas fa-users-cog"></i>
+								Danh sách nhân viên
+							</a>
+							<a href="/companies-list" class="action-btn">
+								<i class="fas fa-building"></i>
+								Quản lý công ty
+							</a>
 						</div>
-					</div>
-					<!-- /Overview Section -->				
 
-					<div class="row">
-						<div class="col-md-12 col-lg-6">
-						
-							<!-- Revenue Chart -->
-							<div class="card card-chart">
-								<div class="card-header">
-									<div class="row align-items-center">
-										<div class="col-6">
-											<h5 class="card-title">Trend of User Sign-ups Over Time</h5>
-										</div>
-										<div class="col-6">
-											<ul class="chart-list-out">
-												<li><span class="circle-blue"></span>Subscribers</li>
-												<li><span class="circle-green"></span>New Users</li>
-												<li class="star-menus"><a href="javascript:;"><i class="fas fa-ellipsis-v"></i></a></li>
-											</ul>                                       
-										</div>
-									</div>						
-								</div>
-								<div class="card-body">
-									<div id="apexcharts-area"></div>
-								</div>
+						<!-- Recent Users -->
+						<div class="card-custom">
+							<div class="card-header-custom">
+								<h5>Người dùng gần đây</h5>
+								<a href="/user" style="font-size: 13px; color: var(--primary-blue);">Xem tất cả →</a>
 							</div>
-							<!-- /Revenue Chart -->
-							
-						</div>
-						
-						<div class="col-md-12 col-lg-6">
-						
-							<!-- Student Chart -->
-							<div class="card card-chart">
-								<div class="card-header">
-									<div class="row align-items-center">
-										<div class="col-6">
-											<h5 class="card-title">Number of Users</h5>
-										</div>
-										<div class="col-6">
-											<ul class="chart-list-out">
-												<li><span class="circle-blue"></span>New Users</li>
-												<li><span class="circle-green"></span>Subscribers</li>
-												<li class="star-menus"><a href="javascript:;"><i class="fas fa-ellipsis-v"></i></a></li>
-											</ul>                                       
-										</div>
-									</div>									
-								</div>
-								<div class="card-body">
-									<div id="bar"></div>
-								</div>
-							</div>
-							<!-- /Student Chart -->							
-						</div>	
-					</div>
-					
-					<div class="row">
-						<div class="col-xl-6 d-flex">						
-							<!-- Star Students -->
-							<div class="card flex-fill student-space comman-shadow">
-								<div class="card-header d-flex align-items-center">
-									<h5 class="card-title">Star Users</h5>
-									<ul class="chart-list-out student-ellips">
-										<li class="star-menus"><a href="javascript:;"><i class="fas fa-ellipsis-v"></i></a></li>
-									</ul> 
-								</div>
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="table star-student table-hover table-center table-borderless table-striped">
-											<thead class="thead-light">
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Người dùng</th>
+											<th>Email</th>
+											<th>Số điện thoại</th>
+											<th>Hành động</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% if (typeof recentUsers !=='undefined' && recentUsers.length> 0) { %>
+											<% recentUsers.forEach(user=> { %>
 												<tr>
-													<th>ID</th>
-													<th>Name</th>
-													<th class="text-center">Plan</th>
-													<th class="text-center">Percentage</th>
-													<th class="text-end">Year</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td class="text-nowrap">
-														<div>PRE2209</div>
+													<td>
+														<span class="user-avatar-sm">
+															<%= user.username.charAt(0).toUpperCase() %>
+														</span>
+														<%= user.username %>
 													</td>
-													<td class="text-nowrap">
-														<a href="profile.ejs">
-															<img class="rounded-circle" src="/public/assets/admin/img/profiles/avatar-02.jpg" width="25" alt="Star Students">
-															John Smith
+													<td>
+														<%= user.email %>
+													</td>
+													<td>
+														<%= user.number %>
+													</td>
+													<td>
+														<a href="/card/<%= user.username %>" target="_blank"
+															class="btn btn-sm btn-outline-primary">
+															Xem Card
 														</a>
 													</td>
-													<td class="text-center">1185</td>
-													<td class="text-center">98%</td>
-													<td class="text-end">
-														<div>2019</div>
-													</td>
 												</tr>
-												<tr>
-													<td class="text-nowrap">
-														<div>PRE1245</div>
-													</td>
-													<td class="text-nowrap">
-														<a href="profile.ejs">
-															<img class="rounded-circle" src="/public/assets/admin/img/profiles/avatar-01.jpg" width="25" alt="Star Students">
-															Jolie Hoskins
-														</a>
-													</td>
-													<td class="text-center">1195</td>
-													<td class="text-center">99.5%</td>
-													<td class="text-end">
-														<div>2018</div>
-													</td>
-												</tr>
-												<tr>
-													<td class="text-nowrap">
-														<div>PRE1625</div>
-													</td>
-													<td class="text-nowrap">
-														<a href="profile.ejs">
-															<img class="rounded-circle" src="/public/assets/admin/img/profiles/avatar-03.jpg" width="25" alt="Star Students">
-															Pennington Joy
-														</a>
-													</td>
-													<td class="text-center">1196</td>
-													<td class="text-center">99.6%</td>
-													<td class="text-end">
-														<div>2017</div>
-													</td>
-												</tr>
-												<tr>
-													<td class="text-nowrap">
-														<div>PRE2516</div>
-													</td>
-													<td class="text-nowrap">
-														<a href="profile.ejs">
-															<img class="rounded-circle" src="/public/assets/admin/img/profiles/avatar-04.jpg" width="25" alt="Star Students">
-															Millie Marsden
-														</a>
-													</td>
-													<td class="text-center">1187</td>
-													<td class="text-center">98.2%</td>
-													<td class="text-end">
-														<div>2016</div>
-													</td>
-												</tr>
-												<tr>
-													<td class="text-nowrap">
-														<div>PRE2209</div>
-													</td>
-													<td class="text-nowrap">
-														<a href="profile.ejs">
-															<img class="rounded-circle" src="/public/assets/admin/img/profiles/avatar-05.jpg" width="25" alt="Star Students">
-															John Smith
-														</a>
-													</td>
-													<td class="text-center">1185</td>
-													<td class="text-center">98%</td>
-													<td class="text-end">
-														<div>2015</div>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
+												<% }); %>
+													<% } else { %>
+														<tr>
+															<td colspan="4" class="text-center text-muted py-4">
+																Chưa có người dùng nào
+															</td>
+														</tr>
+														<% } %>
+									</tbody>
+								</table>
 							</div>
-							<!-- /Star Students -->							
 						</div>
 
-						<div class="col-xl-6 d-flex">						
-							<!--Feed Activity
-							<div class="card flex-fill comman-shadow">
-								<div class="card-header d-flex align-items-center">
-									<h5 class="card-title ">Student Activity </h5>
-									<ul class="chart-list-out student-ellips">
-										<li class="star-menus"><a href="javascript:;"><i class="fas fa-ellipsis-v"></i></a></li>
-									</ul> 
-								</div>
-								<div class="card-body">
-									<div class="activity-groups">
-										<div class="activity-awards">
-											<div class="award-boxs">
-												<img  src="/public/assets/admin/img/icons/award-icon-01.svg"  alt="Award">
-											</div>
-											<div class="award-list-outs">
-												<h4>1st place in "Chess”</h4>
-												<h5>John Doe won 1st place in "Chess"</h5>
-											</div>
-											<div class="award-time-list">
-												<span>1 Day ago</span>
-											</div>
-										</div>
-										<div class="activity-awards">
-											<div class="award-boxs">
-												<img  src="/public/assets/admin/img/icons/award-icon-02.svg"  alt="Award">
-											</div>
-											<div class="award-list-outs">
-												<h4>Participated in "Carrom"</h4>
-												<h5>Justin Lee participated in "Carrom"</h5>
-											</div>
-											<div class="award-time-list">
-												<span>2 hours ago</span>
-											</div>
-										</div>
-										<div class="activity-awards">
-											<div class="award-boxs">
-												<img  src="/public/assets/admin/img/icons/award-icon-03.svg"  alt="Award">
-											</div>
-											<div class="award-list-outs">
-												<h4>Internation conference in "St.John School"</h4>
-												<h5>Justin Leeattended internation conference in "St.John School"</h5>
-											</div>
-											<div class="award-time-list">
-												<span>2 Week ago</span>
-											</div>
-										</div>
-										<div class="activity-awards mb-0">
-											<div class="award-boxs">
-												<img  src="/public/assets/admin/img/icons/award-icon-04.svg"  alt="Award">
-											</div>
-											<div class="award-list-outs">
-												<h4>Won 1st place in "Chess"</h4>
-												<h5>John Doe won 1st place in "Chess"</h5>
-											</div>
-											<div class="award-time-list">
-												<span>3 Day ago</span>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							--->							
+						<!-- Footer -->
+						<div class="page-footer">
+							© 2025 AT Energy JSC. All rights reserved.
 						</div>
 					</div>
-
-					<!-- Socail Media Follows -->
-					<div class="row">
-						<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card flex-fill fb sm-box">
-								<div class="social-likes">
-									<p>Like us on facebook</p>
-									<h6>50,095</h6>
-								</div>
-								<div class="social-boxs">
-									<img  src="/public/assets/admin/img/icons/social-icon-01.svg"  alt="Social Icon">
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card flex-fill twitter sm-box">
-								<div class="social-likes">
-									<p>Follow us on twitter</p>
-									<h6>48,596</h6>
-								</div>
-								<div class="social-boxs">
-									<img  src="/public/assets/admin/img/icons/social-icon-02.svg"  alt="Social Icon">
-								</div>
-							</div>
-						</div>
-	
-						<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card flex-fill insta sm-box">
-								<div class="social-likes">
-									<p>Follow us on instagram</p>
-									<h6>52,085</h6>
-								</div>
-								<div class="social-boxs">
-									<img  src="/public/assets/admin/img/icons/social-icon-03.svg"  alt="Social Icon">
-								</div>
-							</div>
-						</div>
-	
-						<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card flex-fill linkedin sm-box">
-								<div class="social-likes">
-									<p>Follow us on linkedin</p>
-									<h6>69,050</h6>
-								</div>
-								<div class="social-boxs">
-									<img  src="/public/assets/admin/img/icons/social-icon-04.svg"  alt="Social Icon">
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- /Socail Media Follows -->
 				</div>
-			
-			</div>
-			<!-- /Page Wrapper -->
+				<!-- /Page Wrapper -->
 
-			
-		
-        </div>
-		<!-- /Main Wrapper -->
-		
-		<!-- jQuery -->
-        <script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
-		
-		<!-- Bootstrap Core JS -->
-        <script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-		
-		<!-- Feather Icon JS -->
-		<script src="/public/assets/admin/js/feather.min.js"></script>
-		
-		<!-- Slimscroll JS -->
-		<script src="/public/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-		
-		<!-- Chart JS -->
-		<script src="/public/assets/admin/plugins/apexchart/apexcharts.min.js"></script>
-		<script src="/public/assets/admin/plugins/apexchart/chart-data.js"></script>
+	</div>
+	<!-- /Main Wrapper -->
 
-		<!-- Custom JS -->
-		<script src="/public/assets/admin/js/script.js"></script>
-		
-    </body>
+	<!-- jQuery -->
+	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+
+	<!-- Bootstrap Core JS -->
+	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Feather Icon JS -->
+	<script src="/public/assets/admin/js/feather.min.js"></script>
+
+	<!-- Custom JS -->
+	<script src="/public/assets/admin/js/script.js"></script>
+
+</body>
+
 </html>

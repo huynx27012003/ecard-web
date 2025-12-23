@@ -1,116 +1,618 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Template - AT Digital Card Studio</title>
+    <title>Chọn Mẫu Danh Thiếp - AT Digital Card</title>
+    <link rel="shortcut icon" href="/public/assets/icon.ico">
     <link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/public/assets/admin/css/style.css">
+
     <style>
-        body {
-            background: #f8f9fa;
-            font-family: 'Poppins', sans-serif;
+        :root {
+            --primary-blue: #012596;
+            --primary-blue-dark: #011d78;
+            --primary-blue-light: #1a3db8;
+            --accent-red: #CC0514;
+            --text-dark: #1a1a2e;
+            --text-muted: #6b7280;
+            --bg-light: #f8faff;
+            --border-color: #e5e7eb;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, #012596 0%, #001a6a 100%);
-            color: white;
-            padding: 60px 0;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-light);
+            min-height: 100vh;
+        }
+
+        /* Main Content Area */
+        .page-wrapper {
+            margin-left: 240px;
+            padding-top: 60px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .mini-sidebar .page-wrapper {
+            margin-left: 70px;
+        }
+
+        @media (max-width: 991px) {
+            .page-wrapper {
+                margin-left: 0;
+            }
+        }
+
+        .content-area {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            text-align: center;
             margin-bottom: 40px;
         }
 
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        /* Template Grid */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        /* Template Card */
         .template-card {
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
             background: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
         .template-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary-blue);
         }
 
-        .template-img {
-            height: 200px;
-            background: #eee;
+        .template-preview {
+            height: 180px;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e8ecf4 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
-        .template-img i {
-            font-size: 3rem;
-            color: #ccc;
+        .template-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
-        .btn-select {
-            background: #012596;
+        .template-preview-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .template-preview-placeholder svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+
+        .template-body {
+            padding: 20px;
+        }
+
+        .template-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .template-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-use {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--primary-blue);
             color: white;
-            border-radius: 25px;
-            padding: 10px 25px;
             border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .btn-select:hover {
-            background: #001a6a;
+        .btn-use:hover {
+            background: var(--primary-blue-dark);
+        }
+
+        .btn-edit {
+            padding: 12px;
+            background: var(--bg-light);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit:hover {
+            background: white;
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        /* Add New Template Card */
+        .template-card.add-new {
+            border: 2px dashed var(--border-color);
+            background: transparent;
+        }
+
+        .template-card.add-new:hover {
+            border-color: var(--primary-blue);
+            background: rgba(1, 37, 150, 0.02);
+        }
+
+        .add-new-content {
+            height: 100%;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            cursor: pointer;
+        }
+
+        .add-new-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .template-card.add-new:hover .add-new-icon {
+            background: var(--primary-blue);
             color: white;
         }
 
-        .badge-premium {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ffc107;
-            color: #000;
-            font-weight: bold;
+        .add-new-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary-blue);
+        }
+
+        .template-card.add-new:hover .add-new-icon svg {
+            color: white;
+        }
+
+        .add-new-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .add-new-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Modal */
+        .modal-backdrop-custom {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 24px;
+        }
+
+        .modal-backdrop-custom.active {
+            display: flex;
+        }
+
+        .modal-content-custom {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header-custom {
+            padding: 24px 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title-custom {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--bg-light);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: #fee2e2;
+            color: var(--accent-red);
+        }
+
+        .modal-body-custom {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            background: var(--bg-light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(1, 37, 150, 0.1);
+        }
+
+        .modal-footer-custom {
+            padding: 0 24px 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 14px;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #fee2e2;
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 14px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-save:hover {
+            background: var(--primary-blue-dark);
+        }
+
+        /* Footer */
+        .page-footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 24px 16px;
+            }
+
+            .page-title h1 {
+                font-size: 24px;
+            }
+
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="hero-section text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold">Choose Your Design</h1>
-            <p class="lead">Select a professional template to start your digital presence</p>
-        </div>
-    </div>
+    <div class="main-wrapper">
+        <!-- Header -->
+        <%- include('../admin/header.ejs') %>
 
-    <div class="container mb-5">
-        <div class="row">
-            <% templates.forEach(template=> { %>
-                <div class="col-md-4 mb-4">
-                    <div class="template-card animate__animated animate__fadeInUp">
-                        <div class="template-img">
-                            <% if(template.img && template.img.data) { %>
-                                <img src="data:<%= template.img.contentType %>;base64,<%= template.img.data.toString('base64') %>"
-                                    class="img-fluid" alt="<%= template.name %>">
-                                <% } else { %>
-                                    <i class="fas fa-id-card"></i>
-                                    <span class="text-muted">Preview <%= template.name %></span>
-                                    <% } %>
+            <!-- Sidebar -->
+            <%- include('../admin/sidebar.ejs') %>
+
+                <!-- Page Wrapper -->
+                <div class="page-wrapper">
+                    <div class="content-area">
+                        <div class="page-title">
+                            <h1>Chọn Mẫu Danh Thiếp</h1>
+                            <p>Chọn một mẫu thiết kế để bắt đầu tạo danh thiếp số của bạn</p>
                         </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title fw-bold">
-                                <%= template.name %>
-                            </h5>
-                            <p class="text-muted small">Professional business layout with QR code integration</p>
-                            <form action="/design-card" method="POST">
-                                <input type="hidden" name="templateId" value="<%= template._id %>">
-                                <button type="submit" class="btn btn-select">Use This Template</button>
-                            </form>
+
+                        <div class="template-grid">
+                            <!-- Existing Templates -->
+                            <% templates.forEach((template, index)=> { %>
+                                <div class="template-card">
+                                    <div class="template-preview">
+                                        <% if(template.img && template.img.data) { %>
+                                            <img src="data:<%= template.img.contentType %>;base64,<%= template.img.data.toString('base64') %>"
+                                                alt="<%= template.name %>">
+                                            <% } else { %>
+                                                <div class="template-preview-placeholder">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        fill="none" stroke="currentColor" stroke-width="1.5">
+                                                        <rect x="3" y="4" width="18" height="16" rx="2" />
+                                                        <path d="M7 8h4M7 12h10M7 16h6" />
+                                                    </svg>
+                                                    <p>Mẫu <%= index + 1 %>
+                                                    </p>
+                                                </div>
+                                                <% } %>
+                                    </div>
+                                    <div class="template-body">
+                                        <h3 class="template-name">
+                                            <%= template.name==='profsample-1' ? 'AT Energy Professional' :
+                                                template.name %>
+                                        </h3>
+                                        <p class="template-desc">Mẫu danh thiếp chuyên nghiệp với QR code tích hợp</p>
+                                        <div class="template-actions">
+                                            <form action="/design-card" method="POST" style="flex: 1;">
+                                                <input type="hidden" name="templateId" value="<%= template._id %>">
+                                                <button type="submit" class="btn-use">Sử dụng mẫu này</button>
+                                            </form>
+                                            <% if (loggedInUser && (loggedInUser.role==='admin' ||
+                                                loggedInUser.username==='huynx' )) { %>
+                                                <button class="btn-edit"
+                                                    onclick="openEditModal('<%= template._id %>', '<%= template.name %>')"
+                                                    title="Chỉnh sửa">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                        stroke-width="2">
+                                                        <path
+                                                            d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                                        <path
+                                                            d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                                    </svg>
+                                                </button>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }); %>
+
+                                    <!-- Add New Template Card (Admin only) -->
+                                    <% if (loggedInUser && (loggedInUser.role==='admin' ||
+                                        loggedInUser.username==='huynx' )) { %>
+                                        <div class="template-card add-new" onclick="openAddModal()">
+                                            <div class="add-new-content">
+                                                <div class="add-new-icon">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                        fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M12 5v14M5 12h14" />
+                                                    </svg>
+                                                </div>
+                                                <span class="add-new-text">Tạo mẫu mới</span>
+                                                <span class="add-new-desc">Thêm một mẫu danh thiếp mới</span>
+                                            </div>
+                                        </div>
+                                        <% } %>
+
+                                            <!-- Coming Soon Card (if no templates or only 1) -->
+                                            <% if (templates.length < 2) { %>
+                                                <div class="template-card" style="opacity: 0.6; pointer-events: none;">
+                                                    <div class="template-preview">
+                                                        <div class="template-preview-placeholder">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                                fill="none" stroke="currentColor" stroke-width="1.5">
+                                                                <circle cx="12" cy="12" r="10" />
+                                                                <path d="M12 6v6l4 2" />
+                                                            </svg>
+                                                            <p>Sắp ra mắt</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="template-body">
+                                                        <h3 class="template-name">Mẫu mới sắp có</h3>
+                                                        <p class="template-desc">Chúng tôi đang phát triển thêm các mẫu
+                                                            thiết kế mới</p>
+                                                    </div>
+                                                </div>
+                                                <% } %>
                         </div>
                     </div>
                 </div>
-                <% }); %>
+    </div>
+
+    <!-- Add Template Modal -->
+    <div class="modal-backdrop-custom" id="addModal">
+        <div class="modal-content-custom">
+            <div class="modal-header-custom">
+                <h2 class="modal-title-custom">Tạo Mẫu Mới</h2>
+                <button class="modal-close" onclick="closeModal('addModal')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form action="/add-template" method="POST" enctype="multipart/form-data">
+                <div class="modal-body-custom">
+                    <div class="form-group">
+                        <label class="form-label">Tên mẫu</label>
+                        <input type="text" name="name" class="form-control" placeholder="VD: AT Energy Modern" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mô tả (tùy chọn)</label>
+                        <input type="text" name="description" class="form-control" placeholder="Mô tả ngắn về mẫu">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hình ảnh preview (tùy chọn)</label>
+                        <input type="file" name="templateImage" class="form-control" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn-cancel" onclick="closeModal('addModal')">Hủy</button>
+                    <button type="submit" class="btn-save">Tạo mẫu</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <!-- Edit Template Modal -->
+    <div class="modal-backdrop-custom" id="editModal">
+        <div class="modal-content-custom">
+            <div class="modal-header-custom">
+                <h2 class="modal-title-custom">Chỉnh Sửa Mẫu</h2>
+                <button class="modal-close" onclick="closeModal('editModal')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form action="/edit-template" method="POST" id="editForm">
+                <input type="hidden" name="templateId" id="editTemplateId">
+                <div class="modal-body-custom">
+                    <div class="form-group">
+                        <label class="form-label">Tên mẫu</label>
+                        <input type="text" name="name" id="editTemplateName" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn-cancel" onclick="closeModal('editModal')">Hủy</button>
+                    <button type="submit" class="btn-save">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap Core JS -->
+    <script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('active');
+        }
+
+        function openEditModal(id, name) {
+            document.getElementById('editTemplateId').value = id;
+            document.getElementById('editTemplateName').value = name === 'profsample-1' ? 'AT Energy Professional' : name;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-backdrop-custom').forEach(modal => {
+            modal.addEventListener('click', function (e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-backdrop-custom.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

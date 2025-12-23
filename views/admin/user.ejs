@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<title>Ecardify - Users</title>
+	<title>Quản lý người dùng - AT Digital Card</title>
 
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="/public/assets/admin/img/favicon.png">
+	<link rel="shortcut icon" href="/public/assets/icon.ico">
 
-	<!-- Fontfamily -->
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap"
-		rel="stylesheet">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
@@ -20,18 +18,236 @@
 	<!-- Feathericon CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
 
-	<!-- Pe7 CSS -->
-	<link rel="stylesheet" href="/public/assets/admin/plugins/icons/flags/flags.css">
-
 	<!-- Fontawesome CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
 	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
 
-	<!-- Datatables CSS -->
-	<link rel="stylesheet" href="/public/assets/admin/plugins/datatables/datatables.min.css">
-
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/css/style.css">
+
+	<style>
+		:root {
+			--primary-blue: #012596;
+			--accent-red: #CC0514;
+			--text-dark: #1a1a2e;
+			--text-muted: #6b7280;
+			--bg-light: #f8faff;
+			--border-color: #e5e7eb;
+		}
+
+		body {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+			background: var(--bg-light);
+		}
+
+		.page-wrapper {
+			margin-left: 240px;
+			padding-top: 60px;
+			transition: all 0.3s ease;
+		}
+
+		@media (max-width: 991px) {
+			.page-wrapper {
+				margin-left: 0;
+			}
+		}
+
+		.mini-sidebar .page-wrapper {
+			margin-left: 70px;
+		}
+
+		.page-header-custom {
+			margin-bottom: 24px;
+		}
+
+		.page-header-custom h2 {
+			font-size: 24px;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.page-header-custom p {
+			color: var(--text-muted);
+			margin: 4px 0 0;
+		}
+
+		/* Search Bar */
+		.search-bar {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 24px;
+			flex-wrap: wrap;
+		}
+
+		.search-bar input {
+			flex: 1;
+			min-width: 200px;
+			max-width: 400px;
+			padding: 12px 16px;
+			border: 1.5px solid var(--border-color);
+			border-radius: 10px;
+			font-size: 14px;
+			background: white;
+		}
+
+		.search-bar input:focus {
+			outline: none;
+			border-color: var(--primary-blue);
+		}
+
+		.search-bar .btn-search {
+			padding: 12px 24px;
+			background: var(--primary-blue);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			font-weight: 500;
+			cursor: pointer;
+		}
+
+		/* Card */
+		.card-custom {
+			background: white;
+			border-radius: 16px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+			border: 1px solid var(--border-color);
+			overflow: hidden;
+		}
+
+		.card-header-custom {
+			padding: 20px 24px;
+			border-bottom: 1px solid var(--border-color);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 16px;
+		}
+
+		.card-header-custom h5 {
+			font-size: 16px;
+			font-weight: 600;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.btn-add {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 18px;
+			background: var(--primary-blue);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.btn-add:hover {
+			background: #011d78;
+			color: white;
+		}
+
+		/* Table */
+		.table-responsive {
+			padding: 0 24px 24px;
+		}
+
+		.table {
+			margin-bottom: 0;
+		}
+
+		.table thead th {
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: var(--text-muted);
+			border-bottom: 1px solid var(--border-color);
+			padding: 16px 12px;
+			white-space: nowrap;
+		}
+
+		.table tbody td {
+			padding: 16px 12px;
+			vertical-align: middle;
+			border-bottom: 1px solid var(--border-color);
+			color: var(--text-dark);
+		}
+
+		.table tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.user-avatar-sm {
+			width: 36px;
+			height: 36px;
+			border-radius: 10px;
+			background: var(--primary-blue);
+			color: white;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 600;
+			font-size: 14px;
+			margin-right: 10px;
+		}
+
+		.badge-admin {
+			padding: 4px 8px;
+			background: rgba(204, 5, 20, 0.1);
+			color: var(--accent-red);
+			border-radius: 6px;
+			font-size: 11px;
+			font-weight: 600;
+			margin-left: 8px;
+		}
+
+		.btn-sm {
+			padding: 6px 12px;
+			font-size: 12px;
+			border-radius: 8px;
+		}
+
+		.btn-warning {
+			background: #f59e0b !important;
+			border-color: #f59e0b !important;
+			color: white !important;
+		}
+
+		.btn-danger {
+			background: var(--accent-red) !important;
+			border-color: var(--accent-red) !important;
+		}
+
+		.btn-success {
+			background: #10b981 !important;
+			border-color: #10b981 !important;
+		}
+
+		/* Modal */
+		.modal-content {
+			border-radius: 16px;
+			border: none;
+		}
+
+		.modal-header {
+			border-bottom: 1px solid var(--border-color);
+			padding: 20px 24px;
+		}
+
+		.modal-body {
+			padding: 24px;
+		}
+
+		.modal-footer {
+			border-top: 1px solid var(--border-color);
+			padding: 16px 24px;
+		}
+	</style>
 </head>
 
 <body>
@@ -52,312 +268,249 @@
 					<div class="content container-fluid">
 
 						<!-- Page Header -->
-						<div class="page-header">
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="page-sub-header">
-										<h3 class="page-title">User</h3>
-										<ul class="breadcrumb">
-											<li class="breadcrumb-item"><a href="user.ejs">User</a></li>
-											<li class="breadcrumb-item active">All Users</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /Page Header -->
-
-						<div class="student-group-form">
-							<div class="row">
-								<div class="col-lg-3 col-md-6">
-									<div class="form-group">
-										<input type="text" class="form-control" id="searchUserInput"
-											placeholder="Search by ID ,Name,Phone...">
-									</div>
-								</div>
-								<!-- <div class="col-lg-3 col-md-6">  
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Search by Name ...">
-								</div>
-							</div>
-							<div class="col-lg-4 col-md-6">  
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Search by Phone ...">
-								</div>
-							</div> -->
-								<div class="col-lg-2">
-									<div class="search-student-btn">
-										<button type="btn" class="btn btn-primary">Search</button>
-									</div>
-								</div>
-							</div>
+						<div class="page-header-custom">
+							<h2>Quản lý người dùng</h2>
+							<p>Xem và quản lý tất cả người dùng trong hệ thống</p>
 						</div>
 
-						<div class="row">
-							<div class="col-sm-12">
+						<!-- Search Bar -->
+						<div class="search-bar">
+							<input type="text" id="searchUserInput" placeholder="Tìm theo tên, email, số điện thoại...">
+							<button type="button" class="btn-search">
+								<i class="fas fa-search me-2"></i>Tìm kiếm
+							</button>
+						</div>
 
-								<div class="card card-table comman-shadow">
-									<div class="card-body">
+						<!-- Users Table -->
+						<div class="card-custom">
+							<div class="card-header-custom">
+								<h5><i class="fas fa-users me-2"></i>Danh sách người dùng</h5>
+								<button id="addCardBtn" class="btn-add">
+									<i class="fas fa-plus"></i>
+									Thêm Card
+								</button>
+							</div>
 
-										<!-- Page Header -->
-										<div class="page-header">
-											<div class="row align-items-center">
-												<div class="col">
-													<h3 class="page-title">Students</h3>
-												</div>
-												<div class="col-auto text-end float-end ms-auto download-grp">
-													<!-- <a href="/user" class="btn btn-outline-gray me-2 active"><i class="feather-list"></i></a>
-												<a href="/user-grid" class="btn btn-outline-gray me-2"><i class="feather-grid"></i></a>
-												<a href="#" class="btn btn-outline-primary me-2"><i class="fas fa-download"></i> Download</a> -->
-													<a href="#" id="addCardBtn" class="btn btn-primary"><i
-															class="fas fa-plus"></i> Add Card</a>
-												</div>
-											</div>
-										</div>
-										<!-- /Page Header -->
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>STT</th>
+											<th>Tên người dùng</th>
+											<th>Số điện thoại</th>
+											<th>Email</th>
+											<th>Xóa Card</th>
+											<th>Sửa</th>
+											<th>Tạo Card</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% users1.forEach((user,index)=> { %>
+											<tr class="user-row">
+												<td>
+													<%= index + 1 %>
+												</td>
+												<td>
+													<span class="user-avatar-sm">
+														<%= user.username.charAt(0).toUpperCase() %>
+													</span>
+													<%= user.username %>
+														<% if (user.role==='admin' || user.username==='admins' ) { %>
+															<span class="badge-admin">Admin</span>
+															<% } %>
+												</td>
+												<td>
+													<%= user.number %>
+												</td>
+												<td>
+													<%= user.email %>
+												</td>
 
-										<div class="table-responsive">
-											<table
-												class="table border-0 star-student table-hover table-center mb-0 datatable table-striped">
-												<thead class="student-thread">
-													<tr>
+												<td>
+													<% if (user.selectedItems && user.selectedItems.length> 0) { %>
+														<button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+															data-bs-target="#deleteModal<%= user._id %>">
+															<i class="fas fa-trash me-1"></i>Xóa
+														</button>
 
-														<th>S.No</th>
-														<th>Name</th>
-														<th>Phone</th>
-														<th>E-mail</th>
-														<th>Delete</th>
-														<th>Edit</th>
-														<th>Generate Card</th>
-													</tr>
-												</thead>
-												<tbody>
-													<% users1.forEach((user,index)=> { %>
-														<tr class="user-row">
-
-															<td>
-																<%= index + 1 %>
-															</td>
-															<td>
-																<%= user.username %>
-																	<% if (user.role==='admin' ||
-																		user.username==='admins' ) { %>
-																		<span class="badge bg-danger">Admin</span>
-																		<% } %>
-															</td>
-															<td>
-																<%= user.number %>
-															</td>
-															<td>
-																<%= user.email %>
-															</td>
-
-															<td>
-																<% if (user.selectedItems && user.selectedItems.length>
-																	0) { %>
-																	<button class="btn btn-danger"
-																		data-bs-toggle="modal"
-																		data-bs-target="#deleteModal<%= user._id %>">
-																		Delete
-																	</button>
-
-																	<!-- Modal for delete confirmation -->
-																	<div class="modal fade"
-																		id="deleteModal<%= user._id %>" tabindex="-1"
-																		aria-labelledby="deleteModalLabel<%= user._id %>"
-																		aria-hidden="true">
-																		<div class="modal-dialog">
-																			<div class="modal-content">
-																				<div class="modal-header">
-																					<h5 class="modal-title"
-																						id="deleteModalLabel<%= user._id %>">
-																						Delete Card</h5>
-																					<button type="button"
-																						class="btn-close"
-																						data-bs-dismiss="modal"
-																						aria-label="Close"></button>
-																				</div>
-																				<div class="modal-body">
-																					<!-- Form to select card for deletion -->
-																					<form
-																						action="/delete-card/<%= user._id %>"
-																						method="post">
-																						<div class="mb-3">
-																							<label
-																								for="cardSelect<%= user._id %>"
-																								class="form-label">Select
-																								Card to Delete:</label>
-																							<select class="form-select"
-																								id="cardSelect<%= user._id %>"
-																								name="cardId" required>
-																								<%
-																									user.selectedItems.forEach(item=>
-																									{ %>
-																									<option
-																										value="<%= item._id %>">
-																										<%= item.occasion
-																											|| 'Default'
-																											%> /
-																											<%= item.cardType
-																												?
-																												item.cardType.name
-																												: 'Unknown Type'
-																												%> /
-																												<%= item.template
-																													?
-																													item.template.name
-																													: 'Unknown Template'
-																													%>
-																									</option>
-																									<% }); %>
-																							</select>
-																						</div>
-																						<button type="submit"
-																							class="btn btn-danger">Confirm
-																							Delete</button>
-																					</form>
-																				</div>
-																			</div>
-																		</div>
+														<!-- Modal for delete confirmation -->
+														<div class="modal fade" id="deleteModal<%= user._id %>"
+															tabindex="-1"
+															aria-labelledby="deleteModalLabel<%= user._id %>"
+															aria-hidden="true">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title"
+																			id="deleteModalLabel<%= user._id %>">
+																			Xóa Card</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal"
+																			aria-label="Close"></button>
 																	</div>
-																	<% } else { %>
-																		No cards to delete
-																		<% } %>
-															</td>
-
-															<td>
-																<div>
-																	<a href="/edit-user/<%= user._id %>"
-																		class="btn btn-sm btn-warning">
-																		<i class="feather-edit"></i> Edit
-																	</a>
+																	<div class="modal-body">
+																		<form action="/delete-card/<%= user._id %>"
+																			method="post">
+																			<div class="mb-3">
+																				<label for="cardSelect<%= user._id %>"
+																					class="form-label">
+																					Chọn Card để xóa:
+																				</label>
+																				<select class="form-select"
+																					id="cardSelect<%= user._id %>"
+																					name="cardId" required>
+																					<% user.selectedItems.forEach(item=>
+																						{ %>
+																						<option value="<%= item._id %>">
+																							<%= item.occasion
+																								|| 'Default' %> /
+																								<%= item.cardType ?
+																									item.cardType.name
+																									: 'Unknown Type' %>
+																									/
+																									<%= item.template ?
+																										item.template.name
+																										: 'Unknown Template'
+																										%>
+																						</option>
+																						<% }); %>
+																				</select>
+																			</div>
+																			<button type="submit"
+																				class="btn btn-danger">
+																				Xác nhận xóa
+																			</button>
+																		</form>
+																	</div>
 																</div>
-															</td>
-															<td>
-																<% if (user.selectedItems && user.selectedItems.length>
-																	0) { %>
-																	<button class="btn btn-success"
-																		data-bs-toggle="modal"
-																		data-bs-target="#generateCardModal<%= user._id %>">
-																		Generate New Card
-																	</button>
-																	<div class="modal fade"
-																		id="generateCardModal<%= user._id %>"
-																		tabindex="-1"
-																		aria-labelledby="generateCardModalLabel<%= user._id %>"
-																		aria-hidden="true">
-																		<div class="modal-dialog">
-																			<div class="modal-content">
-																				<div class="modal-header">
-																					<h5 class="modal-title"
-																						id="generateCardModalLabel<%= user._id %>">
-																						Generate New Card</h5>
-																					<button type="button"
-																						class="btn-close"
-																						data-bs-dismiss="modal"
-																						aria-label="Close"></button>
-																				</div>
-																				<div class="modal-body">
-																					<!-- Form to select card details for new card generation -->
-																					<form
-																						action="/generate-card/<%= user._id %>"
-																						method="post">
-																						<div class="mb-3">
-																							<label
-																								for="cardSelect<%= user._id %>"
-																								class="form-label">Select
-																								Card to
-																								Generate:</label>
-																							<select class="form-select"
-																								id="cardSelect<%= user._id %>"
-																								name="cardId" required>
-																								<%
-																									user.selectedItems.forEach(item=>
-																									{ %>
-																									<option
-																										value="<%= item._id %>">
-																										<%= item.occasion
-																											|| 'Default'
-																											%> /
-																											<%= item.cardType
-																												?
-																												item.cardType.name
-																												: 'Unknown Type'
-																												%> /
-																												<%= item.template
-																													?
-																													item.template.name
-																													: 'Unknown Template'
-																													%>
-																									</option>
-																									<% }); %>
-																							</select>
-																						</div>
-																						<p>Note: If the card already
-																							exists, the new card will
-																							replace the old one.</p>
-																						<button type="submit"
-																							class="btn btn-success">Generate
-																							Card</button>
-																					</form>
-																				</div>
-																			</div>
-																		</div>
+															</div>
+														</div>
+														<% } else { %>
+															<span class="text-muted">Không có card</span>
+															<% } %>
+												</td>
+
+												<td>
+													<a href="/edit-user/<%= user._id %>" class="btn btn-sm btn-warning">
+														<i class="fas fa-edit"></i> Sửa
+													</a>
+												</td>
+
+												<td>
+													<% if (user.selectedItems && user.selectedItems.length> 0) { %>
+														<button class="btn btn-sm btn-success" data-bs-toggle="modal"
+															data-bs-target="#generateCardModal<%= user._id %>">
+															<i class="fas fa-id-card me-1"></i>Tạo Card
+														</button>
+														<div class="modal fade" id="generateCardModal<%= user._id %>"
+															tabindex="-1"
+															aria-labelledby="generateCardModalLabel<%= user._id %>"
+															aria-hidden="true">
+															<div class="modal-dialog">
+																<div class="modal-content">
+																	<div class="modal-header">
+																		<h5 class="modal-title"
+																			id="generateCardModalLabel<%= user._id %>">
+																			Tạo Card mới
+																		</h5>
+																		<button type="button" class="btn-close"
+																			data-bs-dismiss="modal"
+																			aria-label="Close"></button>
 																	</div>
-																	<% } else { %>
-																		No cards to generate
-																		<% } %>
-															</td>
-														</tr>
-														<% }); %>
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
+																	<div class="modal-body">
+																		<form action="/generate-card/<%= user._id %>"
+																			method="post">
+																			<div class="mb-3">
+																				<label
+																					for="cardSelectGen<%= user._id %>"
+																					class="form-label">
+																					Chọn Card để tạo:
+																				</label>
+																				<select class="form-select"
+																					id="cardSelectGen<%= user._id %>"
+																					name="cardId" required>
+																					<% user.selectedItems.forEach(item=>
+																						{ %>
+																						<option value="<%= item._id %>">
+																							<%= item.occasion
+																								|| 'Default' %> /
+																								<%= item.cardType ?
+																									item.cardType.name
+																									: 'Unknown Type' %>
+																									/
+																									<%= item.template ?
+																										item.template.name
+																										: 'Unknown Template'
+																										%>
+																						</option>
+																						<% }); %>
+																				</select>
+																			</div>
+																			<p class="text-muted small">Lưu ý: Nếu card
+																				đã tồn tại, card mới sẽ thay thế card
+																				cũ.</p>
+																			<button type="submit"
+																				class="btn btn-success">
+																				Tạo Card
+																			</button>
+																		</form>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<% } else { %>
+															<span class="text-muted">Không có card</span>
+															<% } %>
+												</td>
+											</tr>
+											<% }); %>
+									</tbody>
+								</table>
 							</div>
 						</div>
+
 					</div>
-					<div class="modal fade" id="addCardModal" tabindex="-1" role="dialog"
-						aria-labelledby="addCardModalLabel" aria-hidden="true">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="addCardModalLabel">Add Card for Existing User</h5>
-									<button type="button" class="btn-close" data-bs-dismiss="modal"
-										aria-label="Close"></button>
-									<!-- <span aria-hidden="true">&times;</span> -->
-									</button>
-								</div>
-								<div class="modal-body">
-									<form action="/add-card" method="post">
-										<div class="form-group">
-											<label for="phoneNumber">Enter User's Mobile Number:</label>
-											<input type="text" class="form-control" id="phoneNumber" name="phoneNumber"
-												required>
-										</div>
-										<button type="submit" class="btn btn-primary">Submit</button>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Delete Modal -->
-
-
-					<!-- Footer -->
-					<!-- <footer>
-					<p>Copyright © 2022 Dreamguys.</p>					
-				</footer> -->
-					<!-- /Footer -->
 				</div>
 				<!-- /Page Wrapper -->
 
+				<!-- Add Card Modal -->
+				<div class="modal fade" id="addCardModal" tabindex="-1" role="dialog"
+					aria-labelledby="addCardModalLabel" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="addCardModalLabel">Thêm Card cho người dùng</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<form action="/add-card" method="post">
+									<div class="form-group mb-3">
+										<label for="phoneNumber">Nhập số điện thoại người dùng:</label>
+										<input type="text" class="form-control mt-2" id="phoneNumber" name="phoneNumber"
+											required>
+									</div>
+									<button type="submit" class="btn btn-primary">Thêm</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
 	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<!-- Bootstrap JavaScript -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<!-- /Main Wrapper -->
+
+	<!-- jQuery -->
+	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+
+	<!-- Bootstrap Core JS -->
+	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Feather Icon JS -->
+	<script src="/public/assets/admin/js/feather.min.js"></script>
+
+	<!-- Custom JS -->
+	<script src="/public/assets/admin/js/script.js"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -365,13 +518,9 @@
 			$('#addCardBtn').click(function () {
 				$('#addCardModal').modal('show');
 			});
-		});
-	</script>
 
-
-	<script>
-		$(document).ready(function () {
-			function filterEmployees(query) {
+			// Search filter
+			function filterUsers(query) {
 				query = query.toLowerCase();
 				$('.user-row').hide();
 				$('.user-row').each(function () {
@@ -384,37 +533,10 @@
 
 			$('#searchUserInput').on('input', function () {
 				var searchQuery = $(this).val();
-				filterEmployees(searchQuery);
-			});
-
-			// Additional part to show modal when "Add Card" button is clicked
-			$('#addCardBtn').click(function () {
-				$('#addCardModal').modal('show');
+				filterUsers(searchQuery);
 			});
 		});
 	</script>
-
-	<!-- /Main Wrapper -->
-
-	<!-- jQuery -->
-	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
-
-
-
-	<!-- Bootstrap Core JS -->
-	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Feather Icon JS -->
-	<script src="/public/assets/admin/js/feather.min.js"></script>
-
-	<!-- Slimscroll JS -->
-	<script src="/public/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-	<!-- Datatables JS -->
-	<script src="/public/assets/admin/plugins/datatables/datatables.min.js"></script>
-
-	<!-- Custom JS -->
-	<script src="/public/assets/admin/js/script.js"></script>
 </body>
 
 </html>

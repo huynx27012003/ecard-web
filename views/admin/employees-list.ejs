@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<title>Ecardify - Dashboard</title>
+	<title>Danh sách nhân viên - AT Digital Card</title>
 
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="/public/assets/admin/img/favicon.png">
+	<link rel="shortcut icon" href="/public/assets/icon.ico">
 
-	<!-- Fontfamily -->
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap"
-		rel="stylesheet">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
@@ -20,18 +18,201 @@
 	<!-- Feathericon CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
 
-	<!-- Pe7 CSS -->
-	<link rel="stylesheet" href="/public/assets/admin/plugins/icons/flags/flags.css">
-
 	<!-- Fontawesome CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
 	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
 
-	<!-- Datatables CSS -->
-	<link rel="stylesheet" href="/public/assets/admin/plugins/datatables/datatables.min.css">
-
 	<!-- Main CSS -->
 	<link rel="stylesheet" href="/public/assets/admin/css/style.css">
+
+	<style>
+		:root {
+			--primary-blue: #012596;
+			--accent-red: #CC0514;
+			--text-dark: #1a1a2e;
+			--text-muted: #6b7280;
+			--bg-light: #f8faff;
+			--border-color: #e5e7eb;
+			--success: #10b981;
+			--info: #3b82f6;
+		}
+
+		body {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+			background: var(--bg-light);
+		}
+
+		.page-wrapper {
+			margin-left: 240px;
+			padding-top: 60px;
+			transition: all 0.3s ease;
+		}
+
+		@media (max-width: 991px) {
+			.page-wrapper {
+				margin-left: 0;
+			}
+		}
+
+		.mini-sidebar .page-wrapper {
+			margin-left: 70px;
+		}
+
+		.page-header-custom {
+			margin-bottom: 24px;
+		}
+
+		.page-header-custom h2 {
+			font-size: 24px;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.page-header-custom p {
+			color: var(--text-muted);
+			margin: 4px 0 0;
+		}
+
+		/* Search Bar */
+		.search-bar {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 24px;
+			flex-wrap: wrap;
+		}
+
+		.search-bar input {
+			flex: 1;
+			min-width: 200px;
+			max-width: 400px;
+			padding: 12px 16px;
+			border: 1.5px solid var(--border-color);
+			border-radius: 10px;
+			font-size: 14px;
+			background: white;
+		}
+
+		.search-bar input:focus {
+			outline: none;
+			border-color: var(--primary-blue);
+		}
+
+		/* Card */
+		.card-custom {
+			background: white;
+			border-radius: 16px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+			border: 1px solid var(--border-color);
+			overflow: hidden;
+		}
+
+		.card-header-custom {
+			padding: 20px 24px;
+			border-bottom: 1px solid var(--border-color);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 16px;
+		}
+
+		.card-header-custom h5 {
+			font-size: 16px;
+			font-weight: 600;
+			color: var(--text-dark);
+			margin: 0;
+		}
+
+		.btn-add {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 18px;
+			background: var(--primary-blue);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			font-size: 14px;
+			font-weight: 500;
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		.btn-add:hover {
+			background: #011d78;
+			color: white;
+		}
+
+		/* Table */
+		.table-responsive {
+			padding: 0 24px 24px;
+		}
+
+		.table {
+			margin-bottom: 0;
+		}
+
+		.table thead th {
+			font-size: 12px;
+			font-weight: 600;
+			text-transform: uppercase;
+			color: var(--text-muted);
+			border-bottom: 1px solid var(--border-color);
+			padding: 16px 12px;
+			white-space: nowrap;
+		}
+
+		.table tbody td {
+			padding: 16px 12px;
+			vertical-align: middle;
+			border-bottom: 1px solid var(--border-color);
+			color: var(--text-dark);
+		}
+
+		.table tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		.employee-photo {
+			width: 45px;
+			height: 45px;
+			object-fit: cover;
+			border-radius: 10px;
+		}
+
+		.btn-sm {
+			padding: 6px 12px;
+			font-size: 12px;
+			border-radius: 8px;
+		}
+
+		.btn-info {
+			background: var(--info) !important;
+			border-color: var(--info) !important;
+			color: white !important;
+		}
+
+		.btn-warning {
+			background: #f59e0b !important;
+			border-color: #f59e0b !important;
+			color: white !important;
+		}
+
+		.btn-danger {
+			background: var(--accent-red) !important;
+			border-color: var(--accent-red) !important;
+		}
+
+		.company-tag {
+			padding: 4px 10px;
+			background: rgba(1, 37, 150, 0.1);
+			color: var(--primary-blue);
+			border-radius: 6px;
+			font-size: 12px;
+			font-weight: 500;
+		}
+	</style>
 </head>
 
 <body>
@@ -52,171 +233,124 @@
 					<div class="content container-fluid">
 
 						<!-- Page Header -->
-						<div class="page-header">
-							<div class="row">
-								<div class="col-sm-12">
-									<div class="page-sub-header">
-										<h3 class="page-title">User</h3>
-										<ul class="breadcrumb">
-											<li class="breadcrumb-item"><a href="user.ejs">User</a></li>
-											<li class="breadcrumb-item active">All Users</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /Page Header -->
-
-						<div class="student-group-form">
-							<div class="row">
-
-								<!-- <div class="col-lg-3 col-md-6">  
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Search by Name ...">
-								</div>
-							</div>
-							<div class="col-lg-4 col-md-6">  
-								<div class="form-group">
-									<input type="text" class="form-control" placeholder="Search by Phone ...">
-								</div>
-							</div> -->
-								<div class="col-lg-3 col-md-6">
-									<div class="form-group">
-										<input type="text" class="form-control" id="searchEmployeeInput"
-											placeholder="Search by ID, Name, Phone...">
-									</div>
-								</div>
-
-							</div>
+						<div class="page-header-custom">
+							<h2>Danh sách nhân viên</h2>
+							<p>Xem và quản lý thông tin nhân viên các công ty</p>
 						</div>
 
-						<div class="row">
-							<div class="col-sm-12">
+						<!-- Search Bar -->
+						<div class="search-bar">
+							<input type="text" id="searchEmployeeInput" placeholder="Tìm theo tên, chức vụ, công ty...">
+						</div>
 
-								<div class="card card-table comman-shadow">
-									<div class="card-body">
+						<!-- Employees Table -->
+						<div class="card-custom">
+							<div class="card-header-custom">
+								<h5><i class="fas fa-user-tie me-2"></i>Danh sách nhân viên</h5>
+								<a href="/add-employee" class="btn-add">
+									<i class="fas fa-plus"></i>
+									Thêm nhân viên
+								</a>
+							</div>
 
-										<!-- Page Header -->
-										<div class="page-header">
-											<div class="row align-items-center">
-												<div class="col">
-													<h3 class="page-title">Employees</h3>
-												</div>
-												<div class="col-auto text-end float-end ms-auto download-grp">
-													<!-- <a href="/user" class="btn btn-outline-gray me-2 active"><i class="feather-list"></i></a>
-												<a href="/user-grid" class="btn btn-outline-gray me-2"><i class="feather-grid"></i></a>
-												<a href="#" class="btn btn-outline-primary me-2"><i class="fas fa-download"></i> Download</a> -->
-													<a href="/add-employee" id="addCardBtn" class="btn btn-primary"><i
-															class="fas fa-plus"></i> Add Employee</a>
-												</div>
-											</div>
-										</div>
-										<!-- /Page Header -->
-
-										<div class="table-responsive">
-											<table class="table">
-												<thead>
-													<tr>
-														<th>S.No</th>
-														<th>Photo</th>
-														<th>Name</th>
-														<th>Contact</th>
-														<th>Designation</th>
-														<th>Company</th>
-														<th>View Card</th>
-														<th class="text-end">Edit/Delete</th>
-													</tr>
-												</thead>
-
-												<tbody>
-													<% employees.forEach((employee, index)=> { %>
-														<tr class="employee-row">
-															<td>
-																<%= index + 1 %>
-															</td>
-															<td><img src="<%= employee.photo %>" alt="Employee Photo"
-																	width="50"></td>
-															<td>
-																<%= employee.name %>
-															</td>
-															<td>
-																<%= employee.contact %>
-															</td>
-															<td>
-																<%= employee.designation %>
-															</td>
-															<td>
-																<% const company=companies.find(c=> c._id.toString() ===
-																	(employee.company ? employee.company.toString() :
-																	''));
-																	%>
-																	<%= company ? company.name : 'Unknown Company' %>
-
-															</td>
-															<td>
-																<% if (company) { %>
-																	<a href="/<%= slugify(company.name) %>/<%= slugify(employee.name) %>"
-																		target="_blank"
-																		class="btn btn-sm btn-info text-white">
-																		<i class="fas fa-eye"></i> View Card
-																	</a>
-																	<% } else { %>
-																		N/A
-																		<% } %>
-															</td>
-															<td class="text-end">
-																<div class="actions">
-																	<a href="/edit-employee/<%= employee._id %>"
-																		class="btn btn-sm btn-warning">
-																		<i class="feather-edit"></i>
-																	</a>
-																	<a href="/delete-employee/<%= employee._id %>"
-																		class="btn btn-sm btn-danger">
-																		<i class="feather-trash-2"></i>
-																	</a>
-																</div>
-															</td>
-														</tr>
-														<% }); %>
-												</tbody>
-
-											</table>
-										</div>
-									</div>
-								</div>
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>STT</th>
+											<th>Ảnh</th>
+											<th>Tên</th>
+											<th>Liên hệ</th>
+											<th>Chức vụ</th>
+											<th>Công ty</th>
+											<th>Xem Card</th>
+											<th class="text-end">Hành động</th>
+										</tr>
+									</thead>
+									<tbody>
+										<% employees.forEach((employee, index)=> { %>
+											<tr class="employee-row">
+												<td>
+													<%= index + 1 %>
+												</td>
+												<td>
+													<img src="<%= employee.photo %>" alt="Ảnh nhân viên"
+														class="employee-photo">
+												</td>
+												<td><strong>
+														<%= employee.name %>
+													</strong></td>
+												<td>
+													<%= employee.contact %>
+												</td>
+												<td>
+													<%= employee.designation %>
+												</td>
+												<td>
+													<% const company=companies.find(c=> c._id.toString() ===
+														(employee.company ? employee.company.toString() : '')); %>
+														<% if (company) { %>
+															<span class="company-tag">
+																<%= company.name %>
+															</span>
+															<% } else { %>
+																<span class="text-muted">Không rõ</span>
+																<% } %>
+												</td>
+												<td>
+													<% if (company) { %>
+														<a href="/<%= slugify(company.name) %>/<%= slugify(employee.name) %>"
+															target="_blank" class="btn btn-sm btn-info">
+															<i class="fas fa-eye me-1"></i>Xem Card
+														</a>
+														<% } else { %>
+															<span class="text-muted">N/A</span>
+															<% } %>
+												</td>
+												<td class="text-end">
+													<div class="d-flex gap-2 justify-content-end">
+														<a href="/edit-employee/<%= employee._id %>"
+															class="btn btn-sm btn-warning">
+															<i class="fas fa-edit"></i>
+														</a>
+														<a href="/delete-employee/<%= employee._id %>"
+															class="btn btn-sm btn-danger"
+															onclick="return confirm('Bạn có chắc muốn xóa nhân viên này?');">
+															<i class="fas fa-trash"></i>
+														</a>
+													</div>
+												</td>
+											</tr>
+											<% }); %>
+									</tbody>
+								</table>
 							</div>
 						</div>
+
 					</div>
-
-
 				</div>
 				<!-- /Page Wrapper -->
 
 	</div>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<!-- Bootstrap JavaScript -->
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<!-- /Main Wrapper -->
+
+	<!-- jQuery -->
+	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+
+	<!-- Bootstrap Core JS -->
+	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Feather Icon JS -->
+	<script src="/public/assets/admin/js/feather.min.js"></script>
+
+	<!-- Custom JS -->
+	<script src="/public/assets/admin/js/script.js"></script>
 
 	<script>
 		$(document).ready(function () {
-			// Show modal when "Add Card" button is clicked
-			$('#addCardBtn').click(function () {
-				$('#addCardModal').modal('show');
-			});
-		});
-	</script>
-
-	<script>
-		$(document).ready(function () {
-			// Function to filter employees based on the search query
 			function filterEmployees(query) {
-				// Convert the query to lowercase for case-insensitive matching
 				query = query.toLowerCase();
-
-				// Hide all rows
 				$('.employee-row').hide();
-
-				// Loop through each row and show if it matches the query
 				$('.employee-row').each(function () {
 					var rowData = $(this).text().toLowerCase();
 					if (rowData.indexOf(query) !== -1) {
@@ -225,40 +359,12 @@
 				});
 			}
 
-			// Event listener for the search input
 			$('#searchEmployeeInput').on('input', function () {
 				var searchQuery = $(this).val();
 				filterEmployees(searchQuery);
 			});
-
-			// Show modal when "Add Card" button is clicked
-			$('#addCardBtn').click(function () {
-				$('#addCardModal').modal('show');
-			});
 		});
 	</script>
-
-	<!-- /Main Wrapper -->
-
-	<!-- jQuery -->
-	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
-
-
-
-	<!-- Bootstrap Core JS -->
-	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-	<!-- Feather Icon JS -->
-	<script src="/public/assets/admin/js/feather.min.js"></script>
-
-	<!-- Slimscroll JS -->
-	<script src="/public/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-	<!-- Datatables JS -->
-	<script src="/public/assets/admin/plugins/datatables/datatables.min.js"></script>
-
-	<!-- Custom JS -->
-	<script src="/public/assets/admin/js/script.js"></script>
 </body>
 
 </html>
