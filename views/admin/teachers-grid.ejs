@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <title>eCardify - Teachers</title>
+		
+		<!-- Favicon -->
+        <link rel="shortcut icon" href="assets/img/favicon.png">
+	
+		<!-- Fontfamily -->
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap" rel="stylesheet">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+		
+		<!-- Feathericon CSS -->
+        <link rel="stylesheet" href="assets/plugins/feather/feather.css">
+		
+		<!-- Pe7 CSS -->
+		<link rel="stylesheet" href="assets/plugins/icons/flags/flags.css">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+
+		<!-- Datatables CSS -->
+		<link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="assets/css/style.css">
+    </head>
+    <body>
+		
+		<!-- Main Wrapper -->
+        <div class="main-wrapper">
+		
+			<!-- Header -->
+            <%- include('header.ejs') %>
+			<!-- /Header -->
+			
+			<!-- Sidebar -->
+            <%- include('sidebar.ejs') %>
+			<!-- /Sidebar -->
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Teachers</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.ejs">Dashboard</a></li>
+									<li class="breadcrumb-item active">Teachers</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="student-group-form">
+						<div class="row">
+							<div class="col-lg-3 col-md-6">  
+								<div class="form-group">
+									<input type="text" class="form-control" placeholder="Search by ID ...">
+								</div>
+							</div>
+							<div class="col-lg-3 col-md-6">  
+								<div class="form-group">
+									<input type="text" class="form-control" placeholder="Search by Name ...">
+								</div>
+							</div>
+							<div class="col-lg-4 col-md-6">  
+								<div class="form-group">
+									<input type="text" class="form-control" placeholder="Search by Phone ...">
+								</div>
+							</div>
+							<div class="col-lg-2">  
+								<div class="search-student-btn">
+									<button type="btn" class="btn btn-primary">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+					<div class="row">
+						<div class="col-sm-12">
+						
+							<div class="card card-table">
+								<div class="card-body">
+								
+									<!-- Page Header -->
+									<div class="page-header">
+										<div class="row align-items-center">
+											<div class="col">
+												<h3 class="page-title">Teachers</h3>
+											</div>
+											<div class="col-auto text-end float-end ms-auto download-grp">
+												<a href="/teachers" class="btn btn-outline-gray me-2"><i class="feather-list"></i></a>
+												<a href="teachers-grid.ejs" class="btn btn-outline-gray me-2 active"><i class="feather-grid "></i></a>
+											</div>
+										</div>
+									</div>
+									<!-- /Page Header -->
+									
+									<div class="student-pro-list">
+										<div class="row">
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-06.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Malynne</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-04.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Levell Scott</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-03.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Minnie</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-02.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Lois A</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-08.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Calvin</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-09.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Charles Dickens</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-10.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Joe Kelley</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-xl-3 col-lg-4 col-md-6 d-flex">
+												<div class="card">
+													<div class="card-body">
+														<div class="student-box flex-fill">
+															<div class="student-img">
+																<a href="teacher-details.ejs">
+																	<img class="img-fluid" alt="Students Info" src="assets/img/profiles/avatar-08.jpg">
+																</a>
+															</div>
+															<div class="student-content pb-0">												
+																<h5><a href="teacher-details.ejs">Charles Dickens</a></h5>
+																<h6>Teacher</h6>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>							
+						</div>					
+					</div>					
+				</div>
+
+				<!-- Footer -->
+				<footer>
+					<p>Copyright © 2022 Dreamguys.</p>					
+				</footer>
+				<!-- /Footer -->
+				
+			</div>
+			<!-- /Page Wrapper -->
+			
+        </div>
+		<!-- /Main Wrapper -->
+		
+		<!-- jQuery -->
+        <script src="assets/js/jquery-3.6.0.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+        <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+		
+		<!-- Feather Icon JS -->
+		<script src="assets/js/feather.min.js"></script>
+		
+		<!-- Slimscroll JS -->
+        <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+		<!-- Datatables JS -->
+		<script src="assets/plugins/datatables/datatables.min.js"></script>
+		
+		<!-- Custom JS -->
+		<script src="assets/js/script.js"></script>
+    </body>
+</html>

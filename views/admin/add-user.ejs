@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+	<title>Ecardify - Dashboard</title>
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/public/assets/admin/img/favicon.png">
+
+	<!-- Fontfamily -->
+	<link
+		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap"
+		rel="stylesheet">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
+
+	<!-- Feathericon CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
+
+	<!-- Pe7 CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/icons/flags/flags.css">
+
+	<!-- Datepicker CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/css/bootstrap-datetimepicker.min.css">
+
+	<!-- Fontawesome CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+	<link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
+
+	<!-- Select CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/plugins/select2/css/select2.min.css">
+
+	<!-- Main CSS -->
+	<link rel="stylesheet" href="/public/assets/admin/css/style.css">
+	<style>
+		.template-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+			gap: 15px;
+			margin-top: 10px;
+		}
+
+		.template-item {
+			border: 2px solid #eee;
+			border-radius: 10px;
+			padding: 5px;
+			cursor: pointer;
+			transition: all 0.3s;
+			position: relative;
+			background: #fff;
+			text-align: center;
+		}
+
+		.template-item:hover {
+			border-color: #764ba2;
+			transform: scale(1.02);
+		}
+
+		.template-item.active {
+			border-color: #764ba2;
+			background: #f3efff;
+		}
+
+		.template-item.active::after {
+			content: '\f058';
+			font-family: 'Font Awesome 5 Free';
+			font-weight: 900;
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			color: #764ba2;
+		}
+
+		.template-preview {
+			height: 100px;
+			background: #f8f9fa;
+			border-radius: 5px;
+			margin-bottom: 5px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.template-name {
+			font-size: 12px;
+			font-weight: 600;
+			color: #333;
+		}
+
+		.hidden-radio {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+
+		<!-- Header -->
+		<%- include('header.ejs') %>
+
+
+			<!-- /Header -->
+
+			<!-- Sidebar -->
+			<%- include('sidebar.ejs') %>
+				<!-- /Sidebar -->
+
+				<!-- Page Wrapper -->
+				<div class="page-wrapper">
+					<div class="content container-fluid">
+
+						<!-- Page Header -->
+						<div class="page-header">
+							<div class="row align-items-center">
+								<div class="col-sm-12">
+									<div class="page-sub-header">
+										<h3 class="page-title">
+											<%= typeof user !=='undefined' ? 'Create Your Card' : 'Add Users' %>
+										</h3>
+										<ul class="breadcrumb">
+											<li class="breadcrumb-item"><a href="/user">User</a></li>
+											<li class="breadcrumb-item active">Add Users</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Page Header -->
+
+						<div class="row">
+							<div class="col-sm-12">
+
+								<div class="card comman-shadow">
+									<div class="card-body">
+										<form action="/add-user" method="post">
+											<div class="row">
+												<div class="col-12">
+													<h5 class="form-title student-info">User Information <span><a
+																href="javascript:;"><i
+																	class="feather-more-vertical"></i></a></span></h5>
+												</div>
+												<div class="col-12 col-sm-4">
+													<div class="form-group local-forms">
+														<label>Name <span class="login-danger">*</span></label>
+														<input class="form-control" type="text" placeholder="Enter Name"
+															id="username" name="username"
+															value="<%= typeof user !== 'undefined' ? user.username : '' %>"
+															required>
+													</div>
+												</div>
+												<div class="col-12 col-sm-4">
+													<div class="form-group local-forms">
+														<label>Email</label>
+														<input class="form-control" type="text"
+															placeholder="Enter Email" id="email" name="email"
+															value="<%= typeof user !== 'undefined' ? user.email : '' %>"
+															required>
+													</div>
+												</div>
+												<div class="col-12 col-sm-4">
+													<div class="form-group local-forms">
+														<label>Phone number<span class="login-danger">*</span></label>
+														<input class="form-control" type="text"
+															placeholder="Enter Phone number" id="number" name="number"
+															value="<%= typeof user !== 'undefined' ? user.number : '' %>"
+															required>
+													</div>
+												</div>
+												<div class="col-12 col-sm-4">
+													<div class="form-group local-forms">
+														<label>Subscription Plan<span
+																class="login-danger">*</span></label>
+														<select class="form-control select" name="subscriptionPlan">
+															<option>Select Plan</option>
+															<% subscriptionPlans.forEach(plan=> { %>
+																<option value="<%= plan._id %>">
+																	<%= plan.name %>
+																</option>
+																<% }); %>
+														</select>
+													</div>
+												</div>
+
+												<div class="col-12 col-sm-4">
+													<div class="form-group local-forms">
+														<label>Purpose </label>
+														<input class="form-control" type="text"
+															placeholder="Enter Purpose" name="occassion">
+													</div>
+												</div>
+												<div class="col-12 col-sm-4">
+													<div class="form-group local-forms">
+														<label>Card Type<span class="login-danger">*</span></label>
+														<select class="form-control select" name="cardType">
+															<option>Select card</option>
+															<% cardTypes.forEach(cardType=> { %>
+																<option value="<%= cardType._id %>">
+																	<%= cardType.name %>
+																</option>
+																<% }); %>
+														</select>
+													</div>
+												</div>
+												<div class="col-12">
+													<div class="form-group local-forms">
+														<label>Select Your Template <span
+																class="login-danger">*</span></label>
+														<div class="template-grid">
+															<% templates.forEach(template=> { %>
+																<div class="template-item"
+																	onclick="selectTemplate(this, '<%= template._id %>')">
+																	<div class="template-preview">
+																		<i class="fas fa-id-card fa-2x text-muted"></i>
+																	</div>
+																	<div class="template-name">
+																		<%= template.name %>
+																	</div>
+																	<input type="radio" name="template"
+																		value="<%= template._id %>" class="hidden-radio"
+																		required>
+																</div>
+																<% }); %>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-12">
+													<div class="student-submit">
+														<button type="submit" class="btn btn-primary">
+															<%= typeof user !=='undefined' ? 'Next: Design Card'
+																: 'Create User' %>
+														</button>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Page Wrapper -->
+				<!-- /Page Wrapper -->
+
+	</div>
+	<!-- /Main Wrapper -->
+
+	<!-- jQuery -->
+	<script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+
+	<!-- Bootstrap Core JS -->
+	<script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Feather Icon JS -->
+	<script src="/public/assets/admin/js/feather.min.js"></script>
+
+	<!-- Slimscroll JS -->
+	<script src="/public/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+	<!-- Select2 JS -->
+	<script src="/public/assets/admin/plugins/select2/js/select2.min.js"></script>
+
+	<!-- Datepicker Core JS -->
+	<script src="/public/assets/admin/plugins/moment/moment.min.js"></script>
+	<script src="/public/assets/admin/js/bootstrap-datetimepicker.min.js"></script>
+
+	<script>
+		function selectTemplate(element, id) {
+			document.querySelectorAll('.template-item').forEach(el => el.classList.remove('active'));
+			element.classList.add('active');
+			element.querySelector('input').checked = true;
+		}
+	</script>
+	<!-- Custom JS -->
+	<script src="/public/assets/admin/js/script.js"></script>
+
+</body>
+
+</html>

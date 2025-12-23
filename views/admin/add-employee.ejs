@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Employee Information</title>
+    <link rel="shortcut icon" href="/public/assets/admin/img/favicon.png">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/feather/feather.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/icons/flags/flags.css">
+    <link rel="stylesheet" href="/public/assets/admin/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/public/assets/admin/css/style.css">
+</head>
+<style>
+    .note-msg {
+        font-size: 14px;
+        color: #777;
+        /* Adjust the color as needed */
+        margin-bottom: 10px;
+        /* Add margin to separate the note message from the input field */
+    }
+</style>
+
+<body>
+    <div class="main-wrapper">
+        <!-- Header -->
+        <%- include('header.ejs') -%>
+            <!-- /Header -->
+            <!-- Sidebar -->
+            <%- include('sidebar.ejs') -%>
+                <!-- /Sidebar -->
+                <div class="page-wrapper">
+                    <div class="content container-fluid">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card comman-shadow">
+                                    <div class="card-body">
+                                        <form action="/add-employee" method="post" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h5 class="form-title student-info">Employee Information</h5>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Photo:</label>
+                                                        <input class="form-control" type="file" id="photo" name="photo"
+                                                            accept="image/*">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Name:</label>
+                                                        <input class="form-control" type="text" placeholder="Enter Name"
+                                                            id="name" name="name" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Select Company<span class="login-danger">*</span></label>
+                                                        <select class="form-control select" name="company">
+                                                            <option>Select Template</option>
+                                                            <% company.forEach(company=> { %>
+                                                                <option value="<%= company._id %>">
+                                                                    <%= company.name %>
+                                                                </option>
+                                                                <% }); %>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Phone 1:</label>
+                                                        <input class="form-control" type="tel"
+                                                            placeholder="Enter Primary Phone" id="contact"
+                                                            name="contact">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Phone 2:</label>
+                                                        <input class="form-control" type="tel"
+                                                            placeholder="Enter Secondary Phone" id="phone2"
+                                                            name="phone2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Email:</label>
+                                                        <input class="form-control" type="email"
+                                                            placeholder="Enter Email" id="email" name="email">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Website URL:</label>
+                                                        <input class="form-control" type="url"
+                                                            placeholder="https://example.com" name="website">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Address:</label>
+                                                        <input class="form-control" type="text"
+                                                            placeholder="Enter Address" name="address">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Video URL (YouTube):</label>
+                                                        <input class="form-control" type="url"
+                                                            placeholder="YouTube Embed URL" name="videoUrl">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Image Fit:</label>
+                                                        <select class="form-control select" name="imageFit">
+                                                            <option value="cover">Cover (Fill)</option>
+                                                            <option value="contain">Contain (Fit)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Image Position (Y %):</label>
+                                                        <input class="form-control" type="number" value="50"
+                                                            name="imagePos" min="0" max="100">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Rank:</label>
+                                                        <input class="form-control" type="number"
+                                                            placeholder="Enter Rank" id="rank" name="rank">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Designation:</label>
+                                                        <input class="form-control" type="text"
+                                                            placeholder="Enter Designation" id="designation"
+                                                            name="designation">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Employee ID:</label>
+                                                        <input class="form-control" type="text"
+                                                            placeholder="Enter Employee ID" id="empid" name="empid">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Branch ID:</label>
+                                                        <input class="form-control" type="text"
+                                                            placeholder="Enter Branch ID" id="bid" name="bid">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Area:</label>
+                                                        <input class="form-control" type="text"
+                                                            placeholder="Enter Area or NA" id="area" name="area">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Team Size:</label>
+                                                        <input class="form-control" type="number"
+                                                            placeholder="Enter Team Size" id="teamSize" name="teamSize">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-4">
+                                                    <div class="form-group local-forms">
+                                                        <label>Experience (years):</label>
+                                                        <input class="form-control" type="number"
+                                                            placeholder="Enter Experience" id="experience"
+                                                            name="experience">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group local-forms">
+                                                        <label>Achievements:</label>
+                                                        <textarea class="form-control" id="achievements"
+                                                            name="achievements" rows="2"
+                                                            placeholder="Enter Achievements"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="student-submit">
+                                                        <button type="submit" class="btn btn-primary">Create
+                                                            Employee</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </div>
+    <script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
+    <script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/public/assets/admin/js/feather.min.js"></script>
+    <script src="/public/assets/admin/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/public/assets/admin/plugins/select2/js/select2.min.js"></script>
+    <script src="/public/assets/admin/plugins/moment/moment.min.js"></script>
+    <script src="/public/assets/admin/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/public/assets/admin/js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>
+		<%= employee.name %> - <%= company.name %>
+	</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+		rel="stylesheet">
+	<style>
+		:root {
+			--primary: #00458b;
+			/* Blue color for company branding */
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			background: #f8f9fa;
+			font-family: 'Poppins', sans-serif;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			overflow-x: hidden;
+		}
+
+		.mobile-container {
+			width: 100%;
+			max-width: 400px;
+			background: white;
+			min-height: 100vh;
+			box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+		}
+
+		.header-cover {
+			width: 100%;
+			height: 350px;
+			background-color: #eee;
+			background-image: url('<%= employee.photo || "https://images.unsplash.com/photo-1557683316-973673baf926" %>');
+			background-repeat: no-repeat;
+			background-size: <%=employee.imageFit || 'cover' %>;
+			background-position: center <%=employee.imagePos || '50' %>%;
+			position: relative;
+		}
+
+		.header-curve {
+			position: absolute;
+			bottom: -1px;
+			width: 100%;
+			z-index: 5;
+		}
+
+		.company-logo-overlay {
+			position: absolute;
+			bottom: 10px;
+			right: 20px;
+			height: 40px;
+			z-index: 10;
+			pointer-events: none;
+		}
+
+		.company-logo-overlay img {
+			height: 100%;
+			width: auto;
+			object-fit: contain;
+			filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+		}
+
+		/* Flip Card Logic */
+		.profile-section {
+			perspective: 1000px;
+			padding: 0 20px;
+			position: relative;
+			min-height: 220px;
+			margin-top: 25px;
+			/* Added margin to push below logo overlay */
+		}
+
+		.card-flipper {
+			position: relative;
+			width: 100%;
+			transition: transform 0.6s;
+			transform-style: preserve-3d;
+			min-height: 240px;
+		}
+
+		.card-flipper.is-flipped {
+			transform: rotateY(180deg);
+		}
+
+		.info-card,
+		.qr-card {
+			width: 100%;
+			height: 100%;
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
+			border-radius: 15px;
+			padding: 25px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+			position: absolute;
+			top: 0;
+			left: 0;
+			overflow: hidden;
+		}
+
+		.info-card {
+			background: var(--primary);
+			color: white;
+			z-index: 2;
+		}
+
+		.info-card h1 {
+			margin: 0;
+			font-size: 24px;
+			font-weight: 700;
+		}
+
+		.info-card .role {
+			font-size: 14px;
+			opacity: 0.9;
+			margin-bottom: 5px;
+		}
+
+		.qr-card {
+			background: white;
+			color: #333;
+			transform: rotateY(180deg);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			border: 1px solid #eee;
+			z-index: 1;
+		}
+
+		#qrcode {
+			background: white;
+			padding: 10px;
+			border-radius: 10px;
+		}
+
+		#qrcode img {
+			display: block;
+			margin: 0 auto;
+			max-width: 150px;
+		}
+
+		.qr-card h4 {
+			margin: 15px 0 5px;
+			font-size: 14px;
+			color: var(--primary);
+			font-weight: 700;
+		}
+
+		.action-buttons {
+			display: flex;
+			gap: 15px;
+			margin-top: 15px;
+		}
+
+		.action-btn {
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			background: white;
+			color: var(--primary);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+			text-decoration: none;
+			transition: 0.3s;
+			border: none;
+			cursor: pointer;
+		}
+
+		.action-btn:hover {
+			transform: scale(1.1);
+		}
+
+		.section-title {
+			font-size: 16px;
+			font-weight: 600;
+			color: #333;
+			margin: 30px 20px 15px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.section-title::after {
+			content: "";
+			flex: 1;
+			height: 1px;
+			background: #eee;
+		}
+
+		.contact-list {
+			padding: 0 20px;
+		}
+
+		.contact-item {
+			background: var(--primary);
+			color: white;
+			border-radius: 30px;
+			padding: 12px 20px;
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			margin-bottom: 12px;
+			text-decoration: none;
+			font-size: 14px;
+		}
+
+		.contact-item i {
+			width: 20px;
+			opacity: 0.8;
+			text-align: center;
+		}
+
+		.video-container {
+			padding: 0 20px 40px;
+		}
+
+		.video-wrapper {
+			position: relative;
+			padding-bottom: 56.25%;
+			height: 0;
+			border-radius: 15px;
+			overflow: hidden;
+			background: #000;
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+		}
+
+		.video-wrapper iframe {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+
+		.footer {
+			text-align: center;
+			padding: 20px;
+			color: #999;
+			font-size: 12px;
+			background: #fdfdfd;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="mobile-container">
+		<div class="header-cover">
+			<svg class="header-curve" viewBox="0 0 500 150" preserveAspectRatio="none">
+				<path d="M-1.12,75.48 C163.66,163.32 312.64,-25.16 501.12,101.15 L500.00,150.00 L0.00,150.00 Z"
+					style="stroke: none; fill: white;"></path>
+			</svg>
+			<div class="company-logo-overlay">
+				<img src="<%= company.logo %>" alt="Company Logo">
+			</div>
+		</div>
+
+		<div class="profile-section">
+			<div class="card-flipper" id="cardFlipper">
+				<!-- Front Side -->
+				<div class="info-card">
+					<h1>
+						<%= employee.name %>
+					</h1>
+					<div class="role">
+						<%= employee.designation %> - <%= company.name %>
+					</div>
+					<div style="font-size: 12px; opacity: 0.8; margin-bottom: 15px;">
+						<%= employee.address %>
+					</div>
+
+					<div class="action-buttons">
+						<a href="tel:<%= employee.contact %>" class="action-btn"><i class="fa fa-phone"></i></a>
+						<a href="mailto:?to=<%= employee.email %>" class="action-btn"><i class="fa fa-envelope"></i></a>
+						<button class="action-btn" onclick="toggleFlip()"><i class="fa fa-qrcode"></i></button>
+					</div>
+				</div>
+
+				<!-- Back Side (QR Code) -->
+				<div class="qr-card">
+					<div id="qrcode"></div>
+					<h4>SCAN TO CONNECT</h4>
+					<button class="btn"
+						style="margin-top:10px; font-size:12px; color:var(--primary); border:none; background:none; cursor:pointer;"
+						onclick="toggleFlip()">Back to Info</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="section-title">CONTACT INFORMATION</div>
+		<div class="contact-list">
+			<% if (employee.contact) { %>
+				<a href="tel:<%= employee.contact %>" class="contact-item">
+					<i class="fa fa-phone"></i> <span>
+						<%= employee.contact %>
+					</span>
+				</a>
+				<% } %>
+
+					<% if (employee.phone2) { %>
+						<a href="tel:<%= employee.phone2 %>" class="contact-item">
+							<i class="fa fa-phone"></i> <span>
+								<%= employee.phone2 %>
+							</span>
+						</a>
+						<% } %>
+
+							<% if (employee.email) { %>
+								<a href="mailto:?to=<%= employee.email %>" class="contact-item">
+									<i class="fa fa-envelope"></i> <span>
+										<%= employee.email %>
+									</span>
+								</a>
+								<% } %>
+
+									<% if (employee.address) { %>
+										<div class="contact-item">
+											<i class="fa fa-map-marker-alt"></i> <span>
+												<%= employee.address %>
+											</span>
+										</div>
+										<% } %>
+
+											<% if (employee.website) { %>
+												<a href="<%= employee.website %>" target="_blank" class="contact-item">
+													<i class="fa fa-link"></i> <span>
+														<%= employee.website %>
+													</span>
+												</a>
+												<% } %>
+
+													<% if (employee.employeeid) { %>
+														<div class="contact-item">
+															<i class="fa fa-id-card"></i> <span>ID: <%=
+																	employee.employeeid %></span>
+														</div>
+														<% } %>
+
+															<% if (employee.area && employee.area !=='NA' ) { %>
+																<div class="contact-item">
+																	<i class="fa fa-map"></i> <span>Area: <%=
+																			employee.area %></span>
+																</div>
+																<% } %>
+		</div>
+
+		<% if (employee.videoUrl) { %>
+			<div class="section-title">VIDEO</div>
+			<div class="video-container">
+				<div class="video-wrapper">
+					<iframe src="<%= employee.videoUrl %>" allowfullscreen></iframe>
+				</div>
+			</div>
+			<% } %>
+
+				<div class="footer">
+					Create your own digital card with <b>AT Digital Card</b>
+				</div>
+	</div>
+
+	<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+	<script>
+		function toggleFlip() {
+			document.getElementById('cardFlipper').classList.toggle('is-flipped');
+		}
+
+		const currentPath = window.location.pathname;
+		let qrHost = window.location.hostname;
+
+		// Only use serverIp override if we are currently on localhost
+		if (qrHost === 'localhost' || qrHost === '127.0.0.1') {
+			qrHost = '<%= typeof serverIp !== "undefined" ? serverIp : "localhost" %>';
+		}
+
+		const qrUrl = window.location.protocol + '//' + qrHost + (window.location.port ? ':' + window.location.port : '') + currentPath;
+
+		new QRCode(document.getElementById("qrcode"), {
+			text: qrUrl,
+			width: 150,
+			height: 150
+		});
+	</script>
+</body>
+
+</html>

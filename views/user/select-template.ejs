@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Template - AT Digital Card Studio</title>
+    <link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #012596 0%, #001a6a 100%);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+
+        .template-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .template-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-img {
+            height: 200px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .template-img i {
+            font-size: 3rem;
+            color: #ccc;
+        }
+
+        .btn-select {
+            background: #012596;
+            color: white;
+            border-radius: 25px;
+            padding: 10px 25px;
+            border: none;
+        }
+
+        .btn-select:hover {
+            background: #001a6a;
+            color: white;
+        }
+
+        .badge-premium {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ffc107;
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Choose Your Design</h1>
+            <p class="lead">Select a professional template to start your digital presence</p>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <% templates.forEach(template=> { %>
+                <div class="col-md-4 mb-4">
+                    <div class="template-card animate__animated animate__fadeInUp">
+                        <div class="template-img">
+                            <% if(template.img && template.img.data) { %>
+                                <img src="data:<%= template.img.contentType %>;base64,<%= template.img.data.toString('base64') %>"
+                                    class="img-fluid" alt="<%= template.name %>">
+                                <% } else { %>
+                                    <i class="fas fa-id-card"></i>
+                                    <span class="text-muted">Preview <%= template.name %></span>
+                                    <% } %>
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">
+                                <%= template.name %>
+                            </h5>
+                            <p class="text-muted small">Professional business layout with QR code integration</p>
+                            <form action="/design-card" method="POST">
+                                <input type="hidden" name="templateId" value="<%= template._id %>">
+                                <button type="submit" class="btn btn-select">Use This Template</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+
+</html>

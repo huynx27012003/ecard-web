@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AT Digital Card</title>
+    <link rel="stylesheet" href="/public/assets/admin/css/style.css">
+    <link rel="stylesheet" href="/public/assets/admin/plugins/bootstrap/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #012596 0%, #001a6a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .login-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h2 {
+            color: #333;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: #764ba2;
+            border: none;
+            padding: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #5a397a;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-box animate__animated animate__fadeIn">
+        <div class="text-center mb-4">
+            <img src="/public/assets/AT-Energy-Logo-1024x200.png" alt="AT Digital Card" class="img-fluid mb-3"
+                style="max-height: 50px;">
+            <p class="text-muted">Welcome back! Please login.</p>
+        </div>
+        <form action="/login" method="POST">
+            <div class="form-group mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group mb-4">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+            <div class="text-center">
+                <p class="mb-0 text-muted">Don't have an account? <a href="/register"
+                        class="text-primary fw-bold">Register here</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
