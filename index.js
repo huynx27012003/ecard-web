@@ -29,6 +29,8 @@ const slugify = (text) => {
   if (!text) return '';
   return text.toString().toLowerCase().trim()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+    .replace(/đ/g, 'd') // Convert Vietnamese đ
+    .replace(/Đ/g, 'd')
     .replace(/\s+/g, '') // Remove spaces
     .replace(/[^\w-]+/g, '') // Remove non-word chars
     .replace(/--+/g, '-');
@@ -133,8 +135,9 @@ const smartUpload = async (file, folder, filenamePrefix) => {
   }
 };
 
-// Middleware toàn cục để đưa thông tin user vào mọi giao diện (EJS)
+// Middleware toàn cục để đưa thông tin user và công ty vào mọi giao diện (EJS)
 app.use(async (req, res, next) => {
+  res.locals.loggedInUserCompany = null;
   if (req.session.userId) {
     try {
       const user = await User.findById(req.session.userId);
@@ -146,8 +149,15 @@ app.use(async (req, res, next) => {
       }
 
       res.locals.loggedInUser = user;
+
+      if (user && user.companyId) {
+        const company = await mcompany.findById(user.companyId);
+        res.locals.loggedInUserCompany = company || null;
+      }
     } catch (err) {
       console.error("Session User Error:", err);
+      res.locals.loggedInUser = null;
+      res.locals.loggedInUserCompany = null;
     }
   } else {
     res.locals.loggedInUser = null;
@@ -155,9 +165,14 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Middleware kiểm tra quyền Quản trị (Admin hoặc CEO)
+// Middleware kiểm tra quyền Quản trị (Admin, CEO, hoặc Employee)
 const isAdmin = (req, res, next) => {
-  if (res.locals.loggedInUser && (res.locals.loggedInUser.role === 'admin' || res.locals.loggedInUser.role === 'ceo' || res.locals.loggedInUser.username === 'huynx')) {
+  if (res.locals.loggedInUser && (
+    res.locals.loggedInUser.role === 'admin' ||
+    res.locals.loggedInUser.role === 'ceo' ||
+    res.locals.loggedInUser.role === 'employee' ||
+    res.locals.loggedInUser.username === 'huynx'
+  )) {
     return next();
   }
   res.status(403).send(`
@@ -229,14 +244,16 @@ app.post('/login', async (req, res) => {
       req.session.userId = user._id;
 
       // Redirect based on role
-      if (user.role === 'admin' || user.username === 'huynx') {
-        return res.redirect('/user');
-      } else if (user.role === 'ceo') {
-        return res.redirect('/employee-list');
-      }
+        if (user.role === 'admin' || user.username === 'huynx') {
+          return res.redirect('/user');
+        } else if (user.role === 'ceo') {
+          return res.redirect('/employee-list');
+        } else if (user.role === 'employee') {
+          return res.redirect('/index');
+        }
 
-      res.redirect('/create-card');
-    } else {
+        res.redirect('/create-card');
+      } else {
       res.status(401).send("Tên đăng nhập hoặc mật khẩu không đúng");
     }
   } catch (error) {
@@ -329,8 +346,29 @@ app.get('/my-card', async (req, res) => {
 // Route cho người lạ xem card
 app.get('/card/:username', async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username });
-    if (!user) return res.status(404).send("User not found");
+    const slugParam = req.params.username;
+    let user = await User.findOne({ username: slugParam });
+    let employeeRecord = null;
+
+    if (user) {
+      if (user.employeeId) {
+        employeeRecord = await emp.findById(user.employeeId);
+      }
+      if (!employeeRecord) {
+        employeeRecord = await emp.findOne({ email: user.email });
+      }
+    }
+
+    if (!user) {
+      employeeRecord = await findEmployeeBySlug(slugParam);
+      if (employeeRecord) {
+        user = await User.findOne({ employeeId: employeeRecord._id });
+      }
+    }
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
 
     const bcard = await BusinessCard.findOneAndUpdate(
       { user: user._id },
@@ -342,8 +380,32 @@ app.get('/card/:username', async (req, res) => {
     );
     if (!bcard) return res.status(404).send("This user hasn't finished their card yet");
 
+    let companyData = null;
+    if (user.companyId) {
+      companyData = await mcompany.findById(user.companyId);
+    }
+    if (!companyData && employeeRecord && employeeRecord.company) {
+      companyData = await mcompany.findById(employeeRecord.company);
+    }
+
+    const fallbackSocialLinks = [];
+    ['facebook', 'linkedin', 'zalo', 'tiktok'].forEach(platform => {
+      const url = employeeRecord ? employeeRecord[platform] : '';
+      if (url) {
+        fallbackSocialLinks.push({ platform, url });
+      }
+    });
+
+    const socialLinks = (employeeRecord && employeeRecord.socialLinks && employeeRecord.socialLinks.length)
+      ? employeeRecord.socialLinks
+      : fallbackSocialLinks;
+
+    const cardSlug = employeeRecord
+      ? (employeeRecord.slug || slugify(employeeRecord.name))
+      : slugify(user.username);
+
     // Sử dụng giao diện xem công khai chuyên nghiệp đã tạo
-    res.render('user/public-card', { user, bcard });
+    res.render('user/public-card', { user, bcard, companyData, socialLinks, cardSlug });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error loading card");
@@ -493,6 +555,10 @@ app.post('/admin', async (req, res) => {
 });
 
 app.get('/index', isAdmin, async (req, res) => {
+  if (res.locals.loggedInUser && res.locals.loggedInUser.role === 'employee') {
+    return res.redirect('/employee-list');
+  }
+
   try {
     // Fetch real data for dashboard
     const userCount = await User.countDocuments();
@@ -1492,6 +1558,60 @@ function mapFields(formData, section) {
   });
 }
 
+const normalizeArrayInput = (value) => {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+};
+
+const buildSocialLinks = (platformInputs, urlInputs) => {
+  const platforms = normalizeArrayInput(platformInputs);
+  const urls = normalizeArrayInput(urlInputs);
+  const socialLinks = [];
+
+  for (let i = 0; i < urls.length; i++) {
+    const url = urls[i] ? urls[i].trim() : '';
+    if (!url) continue;
+    const platform = platforms[i] ? platforms[i] : '';
+    socialLinks.push({ platform, url });
+  }
+
+  return socialLinks;
+};
+
+const ensureUniqueUsername = async (base, excludeUserId = null) => {
+  const baseValue = base || 'employee';
+  let candidate = baseValue;
+  let suffix = 1;
+  while (true) {
+    const existing = await User.findOne({ username: candidate });
+    if (!existing || (excludeUserId && existing._id.equals(excludeUserId))) {
+      return candidate;
+    }
+    candidate = `${baseValue}${suffix}`;
+    suffix++;
+  }
+};
+
+const generateEmployeeUsername = async (name, fallback, excludeUserId = null) => {
+  let base = slugify(name || '');
+  if (!base && fallback) {
+    const emailPrefix = fallback.split('@')[0];
+    base = slugify(emailPrefix);
+  }
+  if (!base) {
+    base = 'employee';
+  }
+  return ensureUniqueUsername(base, excludeUserId);
+};
+
+const findEmployeeBySlug = async (slug) => {
+  if (!slug) return null;
+  let employeeRecord = await emp.findOne({ slug });
+  if (employeeRecord) return employeeRecord;
+  const allEmployees = await emp.find();
+  return allEmployees.find(e => slugify(e.name) === slug);
+};
+
 
 
 app.post('/custompage/:id', upload.fields([{ name: 'image', maxCount: 1 }]), async (req, res) => {
@@ -1563,7 +1683,7 @@ app.get('/company-details', (req, res) => res.redirect('/add-company'));
 
 app.post('/company-details', isAdmin, upload.single('logo'), async (req, res) => {
   try {
-    const { name, cname, cnum, cmail } = req.body;
+    const { name, fullName, cname, cnum, cmail } = req.body;
     const file = req.file;
 
     const logoUrl = await smartUpload(file, 'company_logo', 'logo') || '/public/assets/admin/img/logo3.png';
@@ -1572,6 +1692,7 @@ app.post('/company-details', isAdmin, upload.single('logo'), async (req, res) =>
       _id: new ObjectId(),
       logo: logoUrl,
       name,
+      fullName: fullName || name, // Use fullName if provided, otherwise use name
       ceo: { name: cname, contact: cnum, email: cmail },
       status: 1, // Set active by default
     });
@@ -1606,6 +1727,72 @@ app.post('/company-details', isAdmin, upload.single('logo'), async (req, res) =>
 });
 
 
+// GET route for editing company
+app.get('/edit-company/:companyId', isAdmin, async (req, res) => {
+  try {
+    const companyId = req.params.companyId;
+    const company = await mcompany.findById(companyId);
+
+    if (!company) {
+      return res.status(404).send('Company not found');
+    }
+
+    res.render('admin/edit-company', { company });
+  } catch (error) {
+    console.error('Error fetching company for editing:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// POST route for updating company
+app.post('/edit-company/:companyId', isAdmin, upload.single('logo'), async (req, res) => {
+  try {
+    const companyId = req.params.companyId;
+    const { name, fullName, cname, cnum, cmail } = req.body;
+    const file = req.file;
+
+    const company = await mcompany.findById(companyId);
+    if (!company) {
+      return res.status(404).send('Company not found');
+    }
+
+    // Update company information
+    company.name = name;
+    company.fullName = fullName || name; // Use fullName if provided, otherwise use name
+    company.ceo.name = cname;
+    company.ceo.contact = cnum;
+    company.ceo.email = cmail;
+
+    // Update logo if a new one is provided
+    if (file) {
+      const logoUrl = await smartUpload(file, 'company_logo', 'logo');
+      if (logoUrl) {
+        company.logo = logoUrl;
+      }
+    }
+
+    await company.save();
+
+    // Update CEO user information if exists (using findOneAndUpdate to avoid validation issues)
+    await User.findOneAndUpdate(
+      { companyId: companyId, role: 'ceo' },
+      {
+        $set: {
+          username: cname.replace(/\s+/g, '').toLowerCase(),
+          number: cnum
+        }
+      },
+      { runValidators: false } // Skip validation for fields we're not updating
+    );
+
+    res.redirect('/companies-list');
+  } catch (error) {
+    console.error('Error updating company:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 app.get('/add-employee', isAdmin, async (req, res) => {
   let company;
   if (res.locals.loggedInUser.role === 'ceo') {
@@ -1626,10 +1813,12 @@ app.post('/add-employee', isAdmin, upload.single('photo'), async (req, res) => {
       rank, designation, empid, bid, area,
       teamSize, experience, achievements
     } = req.body;
+    const socialLinks = buildSocialLinks(req.body.socialPlatforms, req.body.socialUrls);
     const file = req.file;
 
     const photoUrl = await smartUpload(file, 'employee_img', 'photo') || '/public/assets/admin/img/profiles/avatar-01.jpg';
 
+    const employeeSlug = slugify(name) || slugify(email && email.split('@')[0]) || `employee${Date.now()}`;
     const newEmployee = new emp({
       _id: new ObjectId(),
       photo: photoUrl,
@@ -1650,10 +1839,36 @@ app.post('/add-employee', isAdmin, upload.single('photo'), async (req, res) => {
       teamSize: teamSize || 0,
       experience: experience || 0,
       achievements: achievements || '',
-      company: company
+      company: company,
+      socialLinks: socialLinks,
+      slug: employeeSlug
     });
 
     await newEmployee.save();
+
+    // Auto-create User account for employee
+    const existingUser = await User.findOne({ email: email });
+    if (!existingUser) {
+      const employeeUsername = await generateEmployeeUsername(name, email);
+      const defaultPassword = '12345678';
+      const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
+      const employeeUser = new User({
+        username: employeeUsername,
+        email: email,
+        password: hashedPassword,
+        number: contact || 0,
+        role: 'employee',
+        companyId: company,
+        employeeId: newEmployee._id
+      });
+      await employeeUser.save();
+
+      console.log(`✅ Created employee account - Email: ${email}, Password: ${defaultPassword}`);
+    } else {
+      console.log(`ℹ️ User with email ${email} already exists, skipping account creation`);
+    }
+
     res.redirect('/employee-list');
   } catch (error) {
     console.error(error);
@@ -1752,7 +1967,12 @@ app.get('/employee-list', isAdmin, async (req, res) => {
   let employees;
   let companies;
 
-  if (res.locals.loggedInUser.role === 'ceo') {
+  if (res.locals.loggedInUser.role === 'employee') {
+    // Employee only sees their own card
+    const employeeId = res.locals.loggedInUser.employeeId;
+    employees = await emp.find({ _id: employeeId });
+    companies = await mcompany.find({ _id: res.locals.loggedInUser.companyId });
+  } else if (res.locals.loggedInUser.role === 'ceo') {
     // Filter by companyId for CEOs
     const companyId = res.locals.loggedInUser.companyId;
     employees = await emp.find({ company: companyId });
@@ -1779,6 +1999,12 @@ app.post('/edit-employee/:employeeId', upload.single('photo'), async (req, res) 
       return res.status(404).json({ error: 'Employee not found' });
     }
 
+    // Check permissions: employee can only edit their own card
+    const user = res.locals.loggedInUser;
+    if (user && user.role === 'employee' && user.employeeId.toString() !== employeeId) {
+      return res.status(403).send('Bạn không có quyền chỉnh sửa thông tin này');
+    }
+
     // Update employee fields
     employee.name = req.body.name;
     employee.company = req.body.company;
@@ -1798,26 +2024,32 @@ app.post('/edit-employee/:employeeId', upload.single('photo'), async (req, res) 
     employee.teamSize = req.body.teamSize || 0;
     employee.experience = req.body.experience || 0;
     employee.achievements = req.body.achievements || '';
+    employee.socialLinks = buildSocialLinks(req.body.socialPlatforms, req.body.socialUrls);
+    employee.slug = slugify(req.body.name) || employee.slug || slugify(employee.email ? employee.email.split('@')[0] : '') || employeeId;
 
     // Update employee photo if a new one is provided
     if (req.file) {
-      const key = `${employee.company}_${employeeId}`;
-      const s3Params = {
-        Bucket: process.env.S3_BUCKET_NAME,
-        Key: `employee_img/${key}`,
-        Body: req.file.buffer,
-        ContentType: req.file.mimetype
-      };
-      const s3UploadResponse = await s3.upload(s3Params).promise();
-      employee.photo = s3UploadResponse.Location;
+      const photoUrl = await smartUpload(req.file, 'employee_img', 'photo');
+      if (photoUrl) {
+        employee.photo = photoUrl;
+      }
     }
 
     // Save the updated employee to the database
-    const updatedEmployee = await employee.save();
+    await employee.save();
 
-    // Redirect to the employee listing page or any other page after successful update
-    const employees = await emp.find();
-    res.render('admin/employees-list', { employees, companies });
+    const employeeUser = await User.findOne({ employeeId: employee._id });
+    if (employeeUser) {
+      const newUsername = await generateEmployeeUsername(employee.name, employee.email, employeeUser._id);
+      employeeUser.username = newUsername;
+      if (employeeUser.email !== employee.email) {
+        employeeUser.email = employee.email;
+      }
+      await employeeUser.save();
+    }
+
+    // Redirect to the employee listing page
+    res.redirect('/employee-list');
   } catch (error) {
     console.error('Error updating employee:', error);
     res.status(500).send('Internal Server Error');
@@ -1835,7 +2067,14 @@ app.get('/edit-employee/:employeeId', async (req, res) => {
       return res.status(404).json({ error: 'Employee not found' });
     }
 
-    res.render('admin/edit-employee', { employee, companies }); // Include 'companies' here
+    // Check permissions: employee can only edit their own card
+    const user = res.locals.loggedInUser;
+    if (user.role === 'employee' && user.employeeId.toString() !== employeeId) {
+      return res.status(403).send('Bạn không có quyền chỉnh sửa thông tin này');
+    }
+
+    const employeeCompany = companies.find(company => company._id.toString() === (employee.company ? employee.company.toString() : '')) || null;
+    res.render('admin/edit-employee', { employee, companies, employeeCompany }); // Include 'companies' here
   } catch (error) {
     console.error('Error fetching employee for editing:', error);
     res.status(500).send('Internal Server Error');
@@ -1843,28 +2082,51 @@ app.get('/edit-employee/:employeeId', async (req, res) => {
 });
 
 
-app.get('/delete-employee/:employeeId', isAdmin, async (req, res) => {
-  try {
-    const employeeId = req.params.employeeId;
-    const employee = await emp.findByIdAndDelete(employeeId);
+const removeEmployeeWithUser = async (employeeId) => {
+  const employee = await emp.findById(employeeId);
+  if (!employee) return null;
 
-    if (!employee) {
+  if (
+    process.env.S3_BUCKET_NAME &&
+    process.env.AWS_ACCESS_KEY_ID &&
+    employee.photo &&
+    employee.photo.includes('s3.amazonaws.com')
+  ) {
+    try {
+      const key = `employee_img/${employee.company}_${employee._id}`;
+      await s3.deleteObject({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: key,
+      }).promise();
+    } catch (s3Err) {
+      console.warn("S3 Delete Warning:", s3Err.message);
+    }
+  }
+
+  await emp.deleteOne({ _id: employeeId });
+  await User.findOneAndDelete({ employeeId: employee._id });
+  return employee;
+};
+
+app.delete('/delete-employee/:employeeId', isAdmin, async (req, res) => {
+  try {
+    const deleted = await removeEmployeeWithUser(req.params.employeeId);
+    if (!deleted) {
       return res.status(404).json({ error: 'Employee not found' });
     }
+    res.json({ message: 'Employee deleted' });
+  } catch (error) {
+    console.error('Error deleting employee:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
-    // Safe S3 deletion fallback
-    if (process.env.S3_BUCKET_NAME && process.env.AWS_ACCESS_KEY_ID && employee.photo && employee.photo.includes('s3.amazonaws.com')) {
-      try {
-        const key = `employee_img/${employee.company}_${employee._id}`;
-        await s3.deleteObject({
-          Bucket: process.env.S3_BUCKET_NAME,
-          Key: key,
-        }).promise();
-      } catch (s3Err) {
-        console.warn("S3 Delete Warning:", s3Err.message);
-      }
+app.get('/delete-employee/:employeeId', isAdmin, async (req, res) => {
+  try {
+    const deleted = await removeEmployeeWithUser(req.params.employeeId);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Employee not found' });
     }
-
     res.redirect('/employee-list');
   } catch (error) {
     console.error('Error deleting employee:', error);
@@ -1964,13 +2226,22 @@ app.get('/:companyName/:employeeName', async (req, res) => {
       number: employee.phone
     };
 
+    const fallbackSocialLinks = [];
+    ['facebook', 'linkedin', 'zalo', 'tiktok'].forEach(platform => {
+      if (employee[platform]) {
+        fallbackSocialLinks.push({ platform, url: employee[platform] });
+      }
+    });
+
+    const socialLinks = (employee.socialLinks && employee.socialLinks.length) ? employee.socialLinks : fallbackSocialLinks;
+
     const bcard = {
       _id: employee._id,
       Image: employee.photo,
       templateFields: [
         { fieldName: 'Name', fieldValue: employee.name },
         { fieldName: 'Role', fieldValue: employee.designation },
-        { fieldName: 'Company', fieldValue: company.name },
+        { fieldName: 'Company', fieldValue: company.fullName || company.name }, // Use fullName for display
         { fieldName: 'Phone1', fieldValue: employee.phone },
         { fieldName: 'Phone2', fieldValue: employee.hotline || '' },
         { fieldName: 'ContactEmail', fieldValue: employee.email },
@@ -1980,15 +2251,10 @@ app.get('/:companyName/:employeeName', async (req, res) => {
         { fieldName: 'ImageFit', fieldValue: employee.imageFit || 'cover' },
         { fieldName: 'ImagePos', fieldValue: employee.imagePos || '50' }
       ],
-      socialLinks: {
-        facebook: employee.facebook || '',
-        linkedin: employee.linkedin || '',
-        zalo: employee.zalo || '',
-        tiktok: employee.tiktok || ''
-      }
+      socialLinks
     };
-
-    res.render('user/public-card', { user, bcard });
+    const cardSlug = employee.slug || slugify(employee.name);
+    res.render('user/public-card', { user, bcard, companyData: company, cardSlug });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });

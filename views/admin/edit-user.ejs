@@ -133,7 +133,7 @@
 														<select class="form-control select" name="subscriptionPlan_<%= index %>" required>
 															<!-- Iterate over subscription plans -->
 															<% subscriptionPlans.forEach(plan => { %>
-																<option value="<%= plan._id %>" <%= (item.subscriptionPlan && item.subscriptionPlan.plan.toString() === plan._id.toString()) ? 'selected' : '' %>><%= plan.name %></option>
+																<option value="<%= plan._id %>" <%= (item.subscriptionPlan && item.subscriptionPlan.plan && item.subscriptionPlan.plan.toString() === plan._id.toString()) ? 'selected' : '' %>><%= plan.name %></option>
 															<% }); %>
 														</select>
 													</div>

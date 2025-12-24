@@ -25,6 +25,17 @@ const employeeSchema = new mongoose.Schema({
   teamSize: Number,
   experience: Number,
   achievements: String,
+  socialLinks: [
+    {
+      platform: String,
+      url: String,
+    },
+  ],
+  slug: {
+    type: String,
+    default: '',
+    index: true,
+  },
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',

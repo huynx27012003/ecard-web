@@ -26,6 +26,29 @@
         margin-bottom: 10px;
         /* Add margin to separate the note message from the input field */
     }
+    .social-links-wrapper {
+        margin-top: 10px;
+    }
+
+    .social-link-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .social-link-row .form-select,
+    .social-link-row .form-control {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .social-link-row .remove-social-link {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: 10px;
+    }
 </style>
 
 <body>
@@ -105,6 +128,17 @@
                                                             placeholder="https://example.com" name="website">
                                                     </div>
                                                 </div>
+                                                <div class="col-12">
+                                                    <div class="form-group local-forms">
+                                                        <label>Mạng xã hội:</label>
+                                                        <div class="social-links-wrapper" id="socialLinksWrapper"></div>
+                                                        <button type="button"
+                                                            class="btn btn-outline-primary btn-sm mt-2"
+                                                            id="addSocialLinkBtn">+ Thêm link mạng xã hội</button>
+                                                        <small class="text-muted d-block mt-1">Chọn nền tảng
+                                                            và nhập địa chỉ đầy đủ (https://...)</small>
+                                                    </div>
+                                                </div>
                                                 <div class="col-12 col-sm-4">
                                                     <div class="form-group local-forms">
                                                         <label>Address:</label>
@@ -144,9 +178,9 @@
                                                 </div>
                                                 <div class="col-12 col-sm-4">
                                                     <div class="form-group local-forms">
-                                                        <label>Designation:</label>
+                                                        <label>Chức vụ:</label>
                                                         <input class="form-control" type="text"
-                                                            placeholder="Enter Designation" id="designation"
+                                                            placeholder="Nhập chức vụ" id="designation"
                                                             name="designation">
                                                     </div>
                                                 </div>
@@ -209,6 +243,82 @@
                     </div>
                 </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socialOptions = [
+                { value: '', label: 'Chọn nền tảng' },
+                { value: 'facebook', label: 'Facebook' },
+                { value: 'linkedin', label: 'LinkedIn' },
+                { value: 'zalo', label: 'Zalo' },
+                { value: 'tiktok', label: 'TikTok' },
+                { value: 'instagram', label: 'Instagram' },
+                { value: 'youtube', label: 'YouTube' },
+                { value: 'website', label: 'Website' }
+            ];
+
+            const socialLinksWrapper = document.getElementById('socialLinksWrapper');
+            const addSocialLinkBtn = document.getElementById('addSocialLinkBtn');
+
+            const createSocialRow = (platform = '', url = '') => {
+                const row = document.createElement('div');
+                row.className = 'social-link-row d-flex align-items-center gap-2 mb-2';
+
+                const select = document.createElement('select');
+                select.name = 'socialPlatforms[]';
+                select.className = 'form-select';
+                socialOptions.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.value;
+                    opt.textContent = option.label;
+                    select.appendChild(opt);
+                });
+                if (platform) {
+                    select.value = platform;
+                }
+
+                const input = document.createElement('input');
+                input.type = 'url';
+                input.name = 'socialUrls[]';
+                input.className = 'form-control';
+                input.placeholder = 'https://example.com';
+                input.value = url || '';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-outline-secondary btn-sm remove-social-link';
+                removeBtn.innerHTML = '&times;';
+
+                row.append(select, input, removeBtn);
+                return row;
+            };
+
+            const addSocialRow = (platform = '', url = '') => {
+                if (!socialLinksWrapper) return;
+                const newRow = createSocialRow(platform, url);
+                socialLinksWrapper.appendChild(newRow);
+            };
+
+            if (socialLinksWrapper) {
+                addSocialRow();
+                socialLinksWrapper.addEventListener('click', event => {
+                    if (event.target.matches('.remove-social-link')) {
+                        event.preventDefault();
+                        const row = event.target.closest('.social-link-row');
+                        if (row) {
+                            row.remove();
+                            if (!socialLinksWrapper.querySelector('.social-link-row')) {
+                                addSocialRow();
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (addSocialLinkBtn) {
+                addSocialLinkBtn.addEventListener('click', () => addSocialRow());
+            }
+        });
+    </script>
     <script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
     <script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/public/assets/admin/js/feather.min.js"></script>

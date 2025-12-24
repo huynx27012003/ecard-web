@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   number: { type: Number, required: true },
   role: { type: String, default: 'user' }, // Thêm trường phân quyền
   companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'CombinedCompany' }, // Link to company for CEOs
+  employeeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }, // Link to employee for employee role
   selectedItems: [
     {
       occasion: { type: String, default: 'DefaultOccasion' },

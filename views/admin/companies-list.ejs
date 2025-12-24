@@ -264,8 +264,12 @@
 													<%= index + 1 %>
 												</td>
 												<td><strong>
-														<%= company.name %>
-													</strong></td>
+														<%= company.fullName || company.name %>
+													</strong>
+													<% if (company.fullName && company.fullName !==company.name) { %>
+														<br><small class="text-muted">URL: <%= company.name %></small>
+														<% } %>
+												</td>
 												<td>
 													<img src="<%= company.logo %>" alt="Logo" class="company-logo">
 												</td>
@@ -280,6 +284,10 @@
 												</td>
 												<td class="text-end">
 													<div class="d-flex gap-2 justify-content-end">
+														<a href="/edit-company/<%= company._id %>"
+															class="btn btn-sm btn-primary">
+															<i class="fas fa-edit"></i> Sửa
+														</a>
 														<button
 															onclick="updateCompanyStatus('<%= company._id %>', this.getAttribute('data-action'))"
 															data-action='<%= company.status === 1 ? "deactivate" : "activate" %>'

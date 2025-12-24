@@ -18,6 +18,188 @@
     <link rel="stylesheet" href="/public/assets/admin/plugins/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/public/assets/admin/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="/public/assets/admin/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .edit-preview-card {
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+            background: #fff;
+        }
+
+        .preview-top-bar {
+            background: #012596;
+            padding: 10px 16px;
+            color: #fff;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .preview-hero {
+            position: relative;
+            min-height: 220px;
+            background: linear-gradient(180deg, #2344af 0%, #326eb8 100%);
+        }
+
+        .preview-hero-photo {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.35;
+        }
+
+        .preview-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+        }
+
+        .preview-logo {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 140px;
+            object-fit: contain;
+        }
+
+        .preview-card-body {
+            padding: 24px;
+            background: linear-gradient(180deg, #012596, #16377f);
+            color: #fff;
+        }
+
+        .profile-name {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .profile-role {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 6px;
+        }
+
+        .profile-company {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-bottom: 18px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .profile-action {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #012596;
+            background: #fff;
+            border: none;
+            font-size: 20px;
+        }
+
+        .profile-action.outline {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            color: #fff;
+        }
+
+        .preview-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preview-contact-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .preview-contact-item .material-icons {
+            font-size: 18px;
+            color: #79b8ff;
+        }
+
+        .preview-contact-item.is-empty {
+            display: none;
+        }
+
+        .preview-contact-item span {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        .social-links-wrapper {
+            margin-top: 8px;
+        }
+
+        .social-link-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .social-link-row .form-select,
+        .social-link-row .form-control {
+            min-width: 180px;
+            flex: 1;
+        }
+
+        .social-link-row .remove-social-link {
+            flex: 0 0 auto;
+        }
+
+        .preview-social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .preview-social-link {
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+    <% 
+        const previewCompanyName = employeeCompany ? employeeCompany.name : 'AT Energy';
+        const previewCompanyLogo = employeeCompany && employeeCompany.logo ? employeeCompany.logo : '/public/assets/AT-Energy-Logo-1024x200.png';
+        const previewHeroImage = employee.photo || '/public/assets/default-avatar-cutout.png';
+        const previewRoleTitle = employee.designation || 'Employee';
+        const previewPhoneDefault = employee.phone2 || '';
+        const previewAddressDefault = employee.address || '';
+        const previewWebsiteDefault = employee.website || '';
+        const socialOptionChoices = [
+            { value: '', label: 'Chọn nền tảng' },
+            { value: 'facebook', label: 'Facebook' },
+            { value: 'linkedin', label: 'LinkedIn' },
+            { value: 'zalo', label: 'Zalo' },
+            { value: 'tiktok', label: 'TikTok' },
+            { value: 'instagram', label: 'Instagram' },
+            { value: 'youtube', label: 'YouTube' },
+            { value: 'website', label: 'Website' }
+        ];
+        const socialLinksData = employee.socialLinks || [];
+    %>
 </head>
 
 <body>
@@ -26,16 +208,14 @@
             <%- include('sidebar.ejs') -%>
                 <div class="page-wrapper">
                     <div class="content container-fluid">
-                        <div class="row">
-                            <div class="col-sm-12">
+                        <div class="row gx-4">
+                            <div class="col-lg-7">
                                 <div class="card comman-shadow">
                                     <div class="card-body">
+                                        <h5 class="form-title student-info mb-4">Edit Employee Information</h5>
                                         <form action="/edit-employee/<%= employee._id %>" method="post"
                                             enctype="multipart/form-data">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <h5 class="form-title student-info">Edit Employee Information</h5>
-                                                </div>
+                                            <div class="row g-3">
                                                 <div class="col-12 col-sm-4">
                                                     <div class="form-group local-forms">
                                                         <label>Photo:</label>
@@ -55,12 +235,13 @@
                                                 <div class="col-12 col-sm-4">
                                                     <div class="form-group local-forms">
                                                         <label>Select Company:</label>
-                                                        <select class="form-control select" name="company" required>
+                                                        <select class="form-control select" id="company" name="company" required>
                                                             <% companies.forEach(company=> { %>
-                                                                <option value="<%= company._id %>" <%=employee.company
-                                                                    &&
-                                                                    employee.company.toString()===company._id.toString()
-                                                                    ? 'selected' : '' %>>
+                                                                <option value="<%= company._id %>"
+                                                                    data-display-name="<%= company.name %>"
+                                                                    data-logo="<%= company.logo || '' %>"
+                                                                    <%=employee.company && employee.company.toString()===company._id.toString()
+                                                                        ? 'selected' : '' %>>
                                                                     <%= company.name %>
                                                                 </option>
                                                                 <% }); %>
@@ -98,6 +279,15 @@
                                                         <input class="form-control" type="url"
                                                             placeholder="https://example.com" name="website"
                                                             value="<%= employee.website %>">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group local-forms">
+                                                        <label>Mạng xã hội:</label>
+                                                        <div class="social-links-wrapper" id="socialLinksWrapper"></div>
+                                                        <button type="button" class="btn btn-outline-primary btn-sm mt-2"
+                                                            id="addSocialLinkBtn">+ Thêm link mạng xã hội</button>
+                                                        <small class="text-muted d-block mt-1">Chọn nền tảng và nhập địa chỉ đầy đủ (https://...).</small>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-sm-4">
@@ -145,9 +335,9 @@
                                                 </div>
                                                 <div class="col-12 col-sm-4">
                                                     <div class="form-group local-forms">
-                                                        <label>Designation:</label>
+                                                        <label>Chức vụ:</label>
                                                         <input class="form-control" type="text"
-                                                            placeholder="Enter Designation" id="designation"
+                                                            placeholder="Nhập chức vụ" id="designation"
                                                             name="designation" value="<%= employee.designation %>">
                                                     </div>
                                                 </div>
@@ -210,10 +400,227 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-5 mt-4 mt-lg-0">
+                                <div class="card comman-shadow">
+                                    <div class="card-body">
+                                        <div class="edit-preview-card">
+                                            <div class="preview-top-bar">
+                                                <span class="preview-top-title">AT Digital Card</span>
+                                            </div>
+                                            <div class="preview-hero">
+                                                <div class="preview-hero-photo" id="previewHeroPhoto"
+                                                    style="background-image: url('<%= previewHeroImage %>');"></div>
+                                                <div class="preview-wave">
+                                                    <svg viewBox="0 0 500 60" preserveAspectRatio="none">
+                                                        <path d="M0,30 Q125,60 250,30 T500,30 L500,60 L0,60 Z"
+                                                            fill="rgba(255,255,255,0.8)" />
+                                                    </svg>
+                                                </div>
+                                                <img class="preview-logo" id="previewCompanyLogo"
+                                                    src="<%= previewCompanyLogo %>"
+                                                    alt="<%= previewCompanyName %> logo">
+                                            </div>
+                                            <div class="preview-card-body">
+                                                <div class="profile-name" id="previewName"><%= employee.name %></div>
+                                                <div class="profile-role" id="previewRole"><%= previewRoleTitle %></div>
+                                                <div class="profile-company" id="previewCompany"><%= previewCompanyName %></div>
+                                                <div class="profile-actions">
+                                                    <a class="profile-action filled" href="tel:<%= employee.contact || '' %>">
+                                                        <span class="material-icons-outlined">call</span>
+                                                    </a>
+                                                    <a class="profile-action outline"
+                                                        href="mailto:<%= employee.email || '' %>">
+                                                        <span class="material-icons">email</span>
+                                                    </a>
+                                                </div>
+                                                <div class="preview-contact">
+                                                    <div class="preview-contact-item">
+                                                        <span class="material-icons">call</span>
+                                                        <span id="previewMobile"><%= employee.contact || 'Chưa có số' %></span>
+                                                    </div>
+                                                    <div class="preview-contact-item">
+                                                        <span class="material-icons">call</span>
+                                                        <span id="previewPhone2"><%= employee.phone2 || '' %></span>
+                                                    </div>
+                                                    <div class="preview-contact-item">
+                                                        <span class="material-icons">email</span>
+                                                        <span id="previewEmail"><%= employee.email || 'Chưa có email' %></span>
+                                                    </div>
+                                                    <div class="preview-contact-item">
+                                                        <span class="material-icons">public</span>
+                                                        <span id="previewWebsite"><%= employee.website || 'Chưa có website' %></span>
+                                                    </div>
+                                                    <div class="preview-contact-item">
+                                                        <span class="material-icons">place</span>
+                                                        <span id="previewAddress"><%= employee.address || '' %></span>
+                                                    </div>
+                                                </div>
+                                                <div class="preview-social-links" id="previewSocialLinks"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fieldMappings = [
+                { inputId: 'name', targetId: 'previewName', fallback: <%- JSON.stringify(employee.name || '') %> },
+                { inputId: 'designation', targetId: 'previewRole', fallback: <%- JSON.stringify(previewRoleTitle) %> },
+                { inputId: 'contact', targetId: 'previewMobile', fallback: <%- JSON.stringify(employee.contact || 'Chưa có số') %> },
+                { inputId: 'phone2', targetId: 'previewPhone2', fallback: <%- JSON.stringify(employee.phone2 || '') %> },
+                { inputId: 'email', targetId: 'previewEmail', fallback: <%- JSON.stringify(employee.email || 'Chưa có email') %> },
+                { inputId: 'address', targetId: 'previewAddress', fallback: <%- JSON.stringify(previewAddressDefault || '') %> },
+                { inputId: 'website', targetId: 'previewWebsite', fallback: <%- JSON.stringify(previewWebsiteDefault || 'Chưa có website') %> },
+            ];
+
+            const syncField = ({ inputId, targetId, fallback }) => {
+                const input = document.getElementById(inputId);
+                const target = document.getElementById(targetId);
+                if (!target) return;
+                const update = () => {
+                    const value = input ? input.value.trim() : '';
+                    const text = value || fallback;
+                    target.textContent = text;
+                    const parent = target.closest('.preview-contact-item');
+                    if (parent) {
+                        parent.classList.toggle('is-empty', !text.trim());
+                    }
+                };
+                if (input) {
+                    input.addEventListener('input', update);
+                }
+                update();
+            };
+
+            fieldMappings.forEach(syncField);
+
+            const socialOptions = <%- JSON.stringify(socialOptionChoices) %>;
+            const initialSocialLinks = <%- JSON.stringify(socialLinksData) %>;
+            const socialLinksWrapper = document.getElementById('socialLinksWrapper');
+            const addSocialLinkBtn = document.getElementById('addSocialLinkBtn');
+            const previewSocialLinksContainer = document.getElementById('previewSocialLinks');
+
+            const createSocialRow = (platform = '', url = '') => {
+                const row = document.createElement('div');
+                row.className = 'social-link-row d-flex align-items-center gap-2 mb-2';
+
+                const select = document.createElement('select');
+                select.name = 'socialPlatforms[]';
+                select.className = 'form-select';
+                socialOptions.forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option.value;
+                    opt.textContent = option.label;
+                    select.appendChild(opt);
+                });
+                if (platform) {
+                    select.value = platform;
+                }
+
+                const input = document.createElement('input');
+                input.type = 'url';
+                input.name = 'socialUrls[]';
+                input.className = 'form-control';
+                input.placeholder = 'https://example.com';
+                input.value = url || '';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-outline-secondary btn-sm remove-social-link';
+                removeBtn.innerHTML = '&times;';
+
+                row.append(select, input, removeBtn);
+                return row;
+            };
+
+            const renderSocialPreview = () => {
+                if (!previewSocialLinksContainer) return;
+                previewSocialLinksContainer.innerHTML = '';
+                if (!socialLinksWrapper) return;
+                const rows = Array.from(socialLinksWrapper.querySelectorAll('.social-link-row'));
+                rows.forEach(row => {
+                    const select = row.querySelector('select');
+                    const input = row.querySelector('input');
+                    const url = input ? input.value.trim() : '';
+                    if (!url) return;
+                    const platform = select ? select.value : '';
+                    const label = (socialOptions.find(opt => opt.value === platform) || {}).label || 'Link';
+                    const anchor = document.createElement('a');
+                    anchor.className = 'preview-social-link';
+                    anchor.href = url;
+                    anchor.target = '_blank';
+                    anchor.rel = 'noopener';
+                    anchor.textContent = label;
+                    previewSocialLinksContainer.appendChild(anchor);
+                });
+            };
+
+            const addSocialRow = (platform = '', url = '') => {
+                if (!socialLinksWrapper) return;
+                const row = createSocialRow(platform, url);
+                socialLinksWrapper.appendChild(row);
+                renderSocialPreview();
+            };
+
+            if (socialLinksWrapper) {
+                if (initialSocialLinks.length) {
+                    initialSocialLinks.forEach(link => addSocialRow(link.platform, link.url));
+                } else {
+                    addSocialRow();
+                }
+
+                socialLinksWrapper.addEventListener('click', (event) => {
+                    if (event.target.matches('.remove-social-link')) {
+                        event.preventDefault();
+                        const row = event.target.closest('.social-link-row');
+                        if (row) {
+                            row.remove();
+                            if (!socialLinksWrapper.querySelector('.social-link-row')) {
+                                addSocialRow();
+                            }
+                            renderSocialPreview();
+                        }
+                    }
+                });
+
+                socialLinksWrapper.addEventListener('input', renderSocialPreview);
+                socialLinksWrapper.addEventListener('change', renderSocialPreview);
+            }
+
+            if (addSocialLinkBtn) {
+                addSocialLinkBtn.addEventListener('click', () => addSocialRow());
+            }
+
+            const companySelect = document.getElementById('company');
+            const previewCompany = document.getElementById('previewCompany');
+            const previewLogo = document.getElementById('previewCompanyLogo');
+            const defaultCompanyName = <%- JSON.stringify(previewCompanyName) %>;
+            const defaultCompanyLogo = <%- JSON.stringify(previewCompanyLogo) %>;
+
+            const updateCompanyPreview = () => {
+                if (!companySelect || !previewCompany) return;
+                const selected = companySelect.options[companySelect.selectedIndex];
+                if (!selected) return;
+                const displayName = selected.dataset.displayName || defaultCompanyName;
+                previewCompany.textContent = displayName;
+                if (previewLogo) {
+                    const logoSrc = selected.dataset.logo || defaultCompanyLogo;
+                    if (logoSrc) {
+                        previewLogo.src = logoSrc;
+                    }
+                }
+            };
+
+            updateCompanyPreview();
+            if (companySelect) {
+                companySelect.addEventListener('change', updateCompanyPreview);
+            }
+        });
+    </script>
     <script src="/public/assets/admin/js/jquery-3.6.0.min.js"></script>
     <script src="/public/assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/public/assets/admin/js/feather.min.js"></script>
