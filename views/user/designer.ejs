@@ -351,29 +351,164 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             }
 
-            .video-section {
-                margin: 0 20px 20px;
-                border-radius: 12px;
+            /* Live Preview - Match public-card design */
+            .card-preview {
+                width: 360px;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
                 overflow: hidden;
-                background: #000;
-                aspect-ratio: 16/9;
+                font-family: 'Be Vietnam Pro', sans-serif;
             }
 
-            .video-placeholder {
+            .preview-hero {
+                position: relative;
+                background: linear-gradient(180deg, #2344af 0%, #326eb8 50%);
+                min-height: 200px;
+                overflow: hidden;
+            }
+
+            .preview-key-visual {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 200px;
+                height: 200px;
+                background-image: url('/public/uploads/company_logo/AT Energy_Key visual.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                opacity: 0.5;
+            }
+
+            .preview-photo {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: transparent;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center 50%;
+                z-index: 3;
+            }
+
+            .preview-wave {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 50px;
+                z-index: 5;
+            }
+
+            .preview-wave svg {
+                width: 100%;
                 height: 100%;
+                display: block;
+            }
+
+            .preview-logo {
+                position: absolute;
+                bottom: 10px;
+                right: 15px;
+                width: 100px;
+                height: auto;
+                z-index: 6;
+            }
+
+            .preview-card-info {
+                background: linear-gradient(135deg, #2344af 0%, #326eb8 100%);
+                margin: 10px 15px;
+                border-radius: 12px;
+                padding: 18px 16px;
+                color: white;
+                box-shadow: 0 8px 25px rgba(35, 68, 175, 0.3);
+            }
+
+            .preview-name {
+                font-size: 18px;
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+
+            .preview-role {
+                font-size: 12px;
+                opacity: 0.9;
+                margin-bottom: 2px;
+            }
+
+            .preview-company {
+                font-size: 11px;
+                opacity: 0.75;
+                margin-bottom: 12px;
+            }
+
+            .preview-actions {
                 display: flex;
-                flex-direction: column;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .preview-action {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
                 align-items: center;
                 justify-content: center;
-                background: var(--bg-light);
-                color: var(--text-muted);
-                font-size: 12px;
+                font-size: 18px;
             }
 
-            .video-placeholder i {
-                font-size: 32px;
-                margin-bottom: 8px;
-                color: #e53e3e;
+            .preview-action.filled {
+                background: white;
+                color: #2344af;
+            }
+
+            .preview-action.outline {
+                background: transparent;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                color: white;
+            }
+
+            .preview-contacts {
+                padding: 10px 15px;
+            }
+
+            .preview-contact {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                background: linear-gradient(135deg, #2344af 0%, #326eb8 100%);
+                padding: 10px 12px;
+                border-radius: 8px;
+                color: white;
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+
+            .preview-contact i {
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
+            .open-card-link {
+                display: block;
+                text-align: center;
+                padding: 12px;
+                background: var(--primary-blue);
+                color: white;
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                transition: background 0.2s;
+            }
+
+            .open-card-link:hover {
+                background: var(--primary-blue-dark);
+                color: white;
             }
 
             /* Mobile Responsive */
@@ -430,6 +565,27 @@
                                 <span class="template-badge">
                                     <%= template.name==='profsample-1' ? 'AT Energy Professional' : template.name %>
                                 </span>
+                            </div>
+
+                            <!-- Stats Card -->
+                            <div class="stats-card"
+                                style="background: linear-gradient(135deg, #004b8d, #1a5fb4); color: white; padding: 16px 20px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px;">
+                                <div
+                                    style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-eye" style="font-size: 20px;"></i>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 24px; font-weight: 700;">
+                                        <%= selectedItem.viewCount || 0 %>
+                                    </div>
+                                    <div style="font-size: 12px; opacity: 0.8;">Lượt xem card</div>
+                                </div>
+                                <% if(selectedItem.lastViewedAt) { %>
+                                    <div style="text-align: right; font-size: 11px; opacity: 0.7;">
+                                        Xem gần nhất<br>
+                                        <%= new Date(selectedItem.lastViewedAt).toLocaleDateString('vi-VN') %>
+                                    </div>
+                                    <% } %>
                             </div>
 
                             <form action="/businesscard/<%= user._id %>" method="POST" enctype="multipart/form-data"
@@ -513,6 +669,45 @@
                                             placeholder="https://www.youtube.com/embed/..." value="<%= stVideo %>">
                                     </div>
 
+                                    <!-- Social Media Section -->
+                                    <div class="section-title">
+                                        <i class="fas fa-share-alt"></i>
+                                        Mạng xã hội
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label"><i class="fab fa-facebook"
+                                                    style="color:#1877F2"></i> Facebook</label>
+                                            <input type="text" name="facebook" class="form-control"
+                                                placeholder="https://facebook.com/..."
+                                                value="<%= (selectedItem.socialLinks && selectedItem.socialLinks.facebook) || '' %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"><i class="fab fa-linkedin"
+                                                    style="color:#0A66C2"></i> LinkedIn</label>
+                                            <input type="text" name="linkedin" class="form-control"
+                                                placeholder="https://linkedin.com/in/..."
+                                                value="<%= (selectedItem.socialLinks && selectedItem.socialLinks.linkedin) || '' %>">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label"><i class="fas fa-comment-dots"
+                                                    style="color:#0068FF"></i> Zalo</label>
+                                            <input type="text" name="zalo" class="form-control"
+                                                placeholder="https://zalo.me/..."
+                                                value="<%= (selectedItem.socialLinks && selectedItem.socialLinks.zalo) || '' %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label"><i class="fab fa-tiktok"></i> TikTok</label>
+                                            <input type="text" name="tiktok" class="form-control"
+                                                placeholder="https://tiktok.com/@..."
+                                                value="<%= (selectedItem.socialLinks && selectedItem.socialLinks.tiktok) || '' %>">
+                                        </div>
+                                    </div>
+
                                     <!-- Visual Section -->
                                     <div class="section-title">
                                         <i class="fas fa-image"></i>
@@ -569,60 +764,66 @@
 
                         <!-- Preview Panel -->
                         <div class="preview-panel">
-                            <div class="card-preview" id="previewCanvas">
-                                <div class="card-cover" id="previewCover"
-                                    style="background-image: url('<%= stImage %>')"></div>
+                            <div class="card-preview">
+                                <!-- Hero Section -->
+                                <div class="preview-hero" id="previewTheme">
+                                    <div class="preview-key-visual"></div>
+                                    <div class="preview-photo" id="previewCover"
+                                        style="background-image: url('<%= stImage || '/public/assets/default-avatar-cutout.png' %>');">
+                                    </div>
+                                    <div class="preview-wave">
+                                        <svg viewBox="0 0 500 60" preserveAspectRatio="none">
+                                            <path d="M0,30 Q125,60 250,30 T500,30 L500,60 L0,60 Z" fill="white" />
+                                        </svg>
+                                    </div>
+                                    <img class="preview-logo" src="/public/assets/AT-Energy-Logo-1024x200.png"
+                                        alt="AT Energy">
+                                </div>
 
-                                <div class="card-info-box" id="previewTheme" style="background-color: <%= stColor %>">
-                                    <div class="card-name" id="previewName">
+                                <!-- Profile Card -->
+                                <div class="preview-card-info" id="previewCardInfo">
+                                    <div class="preview-name" id="previewName">
                                         <%= stName %>
                                     </div>
-                                    <div class="card-role" id="previewRole">
+                                    <div class="preview-role" id="previewRole">
                                         <%= stRole || 'Chức vụ' %>
                                     </div>
-                                    <div class="card-company" id="previewCompany">
+                                    <div class="preview-company" id="previewCompany">
                                         <%= stCompany || 'Tên công ty' %>
+                                    </div>
+                                    <div class="preview-actions">
+                                        <span class="preview-action filled"><i class="fas fa-phone"></i></span>
+                                        <span class="preview-action outline"><i class="fas fa-envelope"></i></span>
+                                        <span class="preview-action outline"><i class="fas fa-qrcode"></i></span>
                                     </div>
                                 </div>
 
-                                <div class="card-contacts">
-                                    <div class="contact-item">
-                                        <span class="contact-icon">
-                                            <i class="fas fa-phone"></i>
-                                        </span>
+                                <!-- Contacts -->
+                                <div class="preview-contacts">
+                                    <div class="preview-contact">
+                                        <i class="fas fa-phone"></i>
                                         <span id="previewPhone1">
-                                            <%= stPhone1 %>
+                                            <%= stPhone1 || 'Số điện thoại' %>
                                         </span>
                                     </div>
-                                    <div class="contact-item">
-                                        <span class="contact-icon">
-                                            <i class="fas fa-envelope"></i>
-                                        </span>
+                                    <div class="preview-contact">
+                                        <i class="fas fa-envelope"></i>
                                         <span id="previewEmail">
-                                            <%= stEmail %>
+                                            <%= stEmail || 'Email' %>
                                         </span>
                                     </div>
-                                    <div class="contact-item">
-                                        <span class="contact-icon">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                        </span>
+                                    <div class="preview-contact">
+                                        <i class="fas fa-map-marker-alt"></i>
                                         <span id="previewAddress">
                                             <%= stAddress || 'Địa chỉ' %>
                                         </span>
                                     </div>
                                 </div>
 
-                                <div class="video-section" id="videoContainer">
-                                    <% if(stVideo) { %>
-                                        <iframe src="<%= stVideo %>"
-                                            style="width:100%; height:100%; border:none;"></iframe>
-                                        <% } else { %>
-                                            <div class="video-placeholder">
-                                                <i class="fab fa-youtube"></i>
-                                                <span>Video Preview</span>
-                                            </div>
-                                            <% } %>
-                                </div>
+                                <!-- Open Link -->
+                                <a href="/card/<%= user.username %>" target="_blank" class="open-card-link">
+                                    <i class="fas fa-external-link-alt"></i> Mở Card thực tế
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -637,6 +838,7 @@
 
     <!-- Live Preview Script -->
     <script>
+        // Input elements
         const inputs = {
             Name: document.getElementById('inputName'),
             Role: document.getElementById('inputRole'),
@@ -644,13 +846,13 @@
             Email: document.getElementById('inputEmail'),
             Phone1: document.getElementById('inputPhone1'),
             Address: document.getElementById('inputAddress'),
-            VideoURL: document.getElementById('inputVideo'),
             BGColor: document.getElementById('inputBGColor'),
             Image: document.getElementById('inputImage'),
             ImageFit: document.getElementById('inputImageFit'),
             ImagePos: document.getElementById('inputImagePos')
         };
 
+        // Preview elements
         const previews = {
             Name: document.getElementById('previewName'),
             Role: document.getElementById('previewRole'),
@@ -659,49 +861,78 @@
             Phone1: document.getElementById('previewPhone1'),
             Address: document.getElementById('previewAddress'),
             Theme: document.getElementById('previewTheme'),
-            Cover: document.getElementById('previewCover'),
-            Video: document.getElementById('videoContainer')
+            CardInfo: document.getElementById('previewCardInfo'),
+            Cover: document.getElementById('previewCover')
         };
 
-        const updatePreview = () => {
-            previews.Name.innerText = inputs.Name.value || 'Họ và tên';
-            previews.Role.innerText = inputs.Role.value || 'Chức vụ';
-            previews.Company.innerText = inputs.Company.value || 'Tên công ty';
-            previews.Email.innerText = inputs.Email.value || 'email@example.com';
-            previews.Phone1.innerText = inputs.Phone1.value || 'Số điện thoại';
-            previews.Address.innerText = inputs.Address.value || 'Địa chỉ';
-            previews.Theme.style.backgroundColor = inputs.BGColor.value;
+        // Update preview on input change
+        function updatePreview() {
+            if (inputs.Name && previews.Name) previews.Name.innerText = inputs.Name.value || 'Họ và tên';
+            if (inputs.Role && previews.Role) previews.Role.innerText = inputs.Role.value || 'Chức vụ';
+            if (inputs.Company && previews.Company) previews.Company.innerText = inputs.Company.value || 'Tên công ty';
+            if (inputs.Email && previews.Email) previews.Email.innerText = inputs.Email.value || 'Email';
+            if (inputs.Phone1 && previews.Phone1) previews.Phone1.innerText = inputs.Phone1.value || 'Số điện thoại';
+            if (inputs.Address && previews.Address) previews.Address.innerText = inputs.Address.value || 'Địa chỉ';
 
-            // Image preview styling
-            previews.Cover.style.backgroundSize = inputs.ImageFit.value;
-            previews.Cover.style.backgroundPosition = `center ${inputs.ImagePos.value}%`;
-
-            // Video preview
-            if (inputs.VideoURL.value) {
-                previews.Video.innerHTML = `<iframe src="${inputs.VideoURL.value}" style="width:100%; height:100%; border:none;"></iframe>`;
-            } else {
-                previews.Video.innerHTML = `
-                    <div class="video-placeholder">
-                        <i class="fab fa-youtube"></i>
-                        <span>Video Preview</span>
-                    </div>
-                `;
+            // Update theme color
+            if (inputs.BGColor && inputs.BGColor.value) {
+                const color = inputs.BGColor.value;
+                if (previews.Theme) previews.Theme.style.background = `linear-gradient(180deg, ${color} 0%, ${adjustColor(color, 20)} 50%)`;
+                if (previews.CardInfo) previews.CardInfo.style.background = `linear-gradient(135deg, ${color} 0%, ${adjustColor(color, 20)} 100%)`;
+                // Update contact pills
+                document.querySelectorAll('.preview-contact').forEach(el => {
+                    el.style.background = `linear-gradient(135deg, ${color} 0%, ${adjustColor(color, 20)} 100%)`;
+                });
             }
-        };
+
+            // Update photo fit and position
+            if (previews.Cover) {
+                if (inputs.ImageFit) {
+                    previews.Cover.style.backgroundSize = inputs.ImageFit.value;
+                }
+                if (inputs.ImagePos) {
+                    previews.Cover.style.backgroundPosition = `center ${inputs.ImagePos.value}%`;
+                }
+            }
+        }
+
+        // Adjust color brightness
+        function adjustColor(hex, percent) {
+            const num = parseInt(hex.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = Math.min(255, (num >> 16) + amt);
+            const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
+            const B = Math.min(255, (num & 0x0000FF) + amt);
+            return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+        }
 
         // Attach event listeners
         Object.keys(inputs).forEach(key => {
-            if (inputs[key]) inputs[key].addEventListener('input', updatePreview);
+            if (inputs[key]) {
+                inputs[key].addEventListener('input', updatePreview);
+            }
         });
 
         // Image file preview
-        inputs.Image.addEventListener('change', function () {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => previews.Cover.style.backgroundImage = `url(${e.target.result})`;
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
+        if (inputs.Image) {
+            inputs.Image.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        if (previews.Cover) previews.Cover.style.backgroundImage = `url(${e.target.result})`;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+
+        // Sidebar toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                document.body.classList.toggle('mini-sidebar');
+            });
+        }
 
         // Initialize on load
         window.addEventListener('load', updatePreview);

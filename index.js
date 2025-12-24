@@ -332,7 +332,14 @@ app.get('/card/:username', async (req, res) => {
     const user = await User.findOne({ username: req.params.username });
     if (!user) return res.status(404).send("User not found");
 
-    const bcard = await BusinessCard.findOne({ user: user._id }).sort({ _id: -1 });
+    const bcard = await BusinessCard.findOneAndUpdate(
+      { user: user._id },
+      {
+        $inc: { viewCount: 1 },
+        $set: { lastViewedAt: new Date() }
+      },
+      { new: true, sort: { _id: -1 } }
+    );
     if (!bcard) return res.status(404).send("This user hasn't finished their card yet");
 
     // Sử dụng giao diện xem công khai chuyên nghiệp đã tạo
@@ -341,6 +348,12 @@ app.get('/card/:username', async (req, res) => {
     console.error(error);
     res.status(500).send("Error loading card");
   }
+});
+
+
+// Short URL for cards - redirects to full card URL
+app.get('/c/:username', (req, res) => {
+  res.redirect(`/card/${req.params.username}`);
 });
 
 
@@ -1237,6 +1250,13 @@ app.post('/businesscard/:userId', upload.fields([
       selectedSubscriptionPlan: plan,
       templateFields: templateFields,
       bgColor: req.body.bgColor || '',
+      // Social Media Links
+      socialLinks: {
+        facebook: req.body.facebook || '',
+        linkedin: req.body.linkedin || '',
+        zalo: req.body.zalo || '',
+        tiktok: req.body.tiktok || '',
+      },
     };
 
     // Chỉ cập nhật ảnh nếu có ảnh mới hoặc giữ lại ảnh cũ
@@ -1266,14 +1286,156 @@ app.post('/businesscard/:userId', upload.fields([
 
     // Sau khi lưu xong, thông báo link cho user
     const user = await User.findById(userId);
+    const cardUrl = `/card/${user.username}`;
+    const fullUrl = `${req.protocol}://${req.get('host')}${cardUrl}`;
+
     res.send(`
-        <div style="text-align:center; padding:50px; font-family:sans-serif;">
-            <h2>🎉 Thẻ của bạn đã được tạo thành công!</h2>
-            <p>Link để người lạ xem thẻ của bạn là:</p>
-            <a href="/card/${user.username}" style="font-size:20px; color:#764ba2;">http://localhost:8000/card/${user.username}</a>
-            <br><br>
-            <a href="/my-card" style="color:gray;">Quay lại chỉnh sửa</a>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Card Thành Công - AT Digital Card</title>
+    <link rel="shortcut icon" href="/public/assets/icon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f0fe 100%);
+            padding: 20px;
+        }
+        .success-card {
+            background: white;
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 75, 141, 0.15);
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: scaleIn 0.5s ease;
+        }
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .success-icon .material-icons { font-size: 40px; color: white; }
+        h1 { color: #1a1a2e; font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+        .subtitle { color: #6b7280; font-size: 15px; margin-bottom: 32px; }
+        .card-link-box {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .card-link-label { color: #6b7280; font-size: 12px; margin-bottom: 8px; }
+        .card-link {
+            color: #004b8d;
+            font-size: 14px;
+            font-weight: 600;
+            word-break: break-all;
+            text-decoration: none;
+        }
+        .card-link:hover { text-decoration: underline; }
+        .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #004b8d;
+            color: white;
+        }
+        .btn-primary:hover { background: #003d73; transform: translateY(-2px); }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #1a1a2e;
+        }
+        .btn-secondary:hover { background: #e5e7eb; }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #004b8d;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 12px auto 0;
+        }
+        .copy-btn:hover { text-decoration: underline; }
+        .footer-text { color: #9ca3af; font-size: 12px; margin-top: 24px; }
+    </style>
+</head>
+<body>
+    <div class="success-card">
+        <div class="success-icon">
+            <span class="material-icons">check</span>
         </div>
+        <h1>Tạo Card Thành Công! 🎉</h1>
+        <p class="subtitle">Danh thiếp số của bạn đã sẵn sàng để chia sẻ</p>
+        
+        <div class="card-link-box">
+            <div class="card-link-label">Link danh thiếp của bạn</div>
+            <a href="${cardUrl}" class="card-link" id="cardLink">${fullUrl}</a>
+            <button class="copy-btn" onclick="copyLink()">
+                <span class="material-icons" style="font-size:16px">content_copy</span>
+                Sao chép link
+            </button>
+        </div>
+        
+        <div class="btn-group">
+            <a href="${cardUrl}" class="btn btn-primary">
+                <span class="material-icons" style="font-size:18px">visibility</span>
+                Xem Card
+            </a>
+            <a href="/my-card" class="btn btn-secondary">
+                <span class="material-icons" style="font-size:18px">edit</span>
+                Chỉnh sửa
+            </a>
+        </div>
+        
+        <p class="footer-text">© 2025 AT Energy JSC. All rights reserved.</p>
+    </div>
+    
+    <script>
+        function copyLink() {
+            navigator.clipboard.writeText('${fullUrl}');
+            const btn = document.querySelector('.copy-btn');
+            btn.innerHTML = '<span class="material-icons" style="font-size:16px">check</span> Đã sao chép!';
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-icons" style="font-size:16px">content_copy</span> Sao chép link';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
     `);
   } catch (error) {
     console.error(error);
@@ -1794,7 +1956,39 @@ app.get('/:companyName/:employeeName', async (req, res) => {
 
     if (!employee) return res.status(404).json({ message: 'Employee not found' });
 
-    res.render('templates/company-auth/index', { employee, company });
+    // 3. Map employee data to bcard format for public-card.ejs compatibility
+    const user = {
+      _id: employee._id,
+      username: slugify(employee.name),
+      email: employee.email,
+      number: employee.phone
+    };
+
+    const bcard = {
+      _id: employee._id,
+      Image: employee.photo,
+      templateFields: [
+        { fieldName: 'Name', fieldValue: employee.name },
+        { fieldName: 'Role', fieldValue: employee.designation },
+        { fieldName: 'Company', fieldValue: company.name },
+        { fieldName: 'Phone1', fieldValue: employee.phone },
+        { fieldName: 'Phone2', fieldValue: employee.hotline || '' },
+        { fieldName: 'ContactEmail', fieldValue: employee.email },
+        { fieldName: 'Address', fieldValue: employee.address },
+        { fieldName: 'URL', fieldValue: employee.website || company.website || 'https://at-energy.vn' },
+        { fieldName: 'VideoURL', fieldValue: employee.video || '' },
+        { fieldName: 'ImageFit', fieldValue: employee.imageFit || 'cover' },
+        { fieldName: 'ImagePos', fieldValue: employee.imagePos || '50' }
+      ],
+      socialLinks: {
+        facebook: employee.facebook || '',
+        linkedin: employee.linkedin || '',
+        zalo: employee.zalo || '',
+        tiktok: employee.tiktok || ''
+      }
+    };
+
+    res.render('user/public-card', { user, bcard });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });

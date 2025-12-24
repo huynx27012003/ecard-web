@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <% const getField=(name)=> (bcard.templateFields.find(f => f.fieldName === name) || {}).fieldValue || '';
         const name = getField('Name') || user.username;
         const role = getField('Role');
@@ -16,531 +16,865 @@
         const videoUrl = getField('VideoURL');
         const imgFit = getField('ImageFit') || 'cover';
         const imgPos = getField('ImagePos') || '50';
-        const primaryColor = bcard.bgColor || '#012596';
+        const social = bcard.socialLinks || {};
+        const cardUrl = `${typeof serverIp !== 'undefined' ? 'http://' + serverIp + ':3000' :
+        ''}/card/${user.username}`;
+        const cardImage = bcard.Image || '/public/assets/default-avatar.png';
         %>
+
+        <!-- Primary Meta Tags -->
         <title>
-            <%= name %> - AT Digital Card
+            <%= name %> - <%= role ? role + ' | ' : '' %>
+                    <%= company %> | AT Digital Card
         </title>
+        <meta name="title" content="<%= name %> - <%= company %> | AT Digital Card">
+        <meta name="description"
+            content="<%= name %><%= role ? ', ' + role : '' %> tại <%= company %>. Liên hệ: <%= mobile %>. Địa chỉ: <%= address %>">
+        <meta name="author" content="<%= name %>">
+        <meta name="robots" content="index, follow">
+        <link rel="canonical" href="<%= cardUrl %>">
         <link rel="shortcut icon" href="/public/assets/icon.ico">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="profile">
+        <meta property="og:url" content="<%= cardUrl %>">
+        <meta property="og:title" content="<%= name %> - <%= company %>">
+        <meta property="og:description" content="<%= role ? role + ' - ' : '' %>Liên hệ: <%= mobile %> | <%= email %>">
+        <meta property="og:image" content="<%= cardImage %>">
+        <meta property="og:site_name" content="AT Digital Card">
+        <meta property="og:locale" content="vi_VN">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:url" content="<%= cardUrl %>">
+        <meta name="twitter:title" content="<%= name %> - <%= company %>">
+        <meta name="twitter:description" content="<%= role ? role + ' - ' : '' %>Liên hệ: <%= mobile %>">
+        <meta name="twitter:image" content="<%= cardImage %>">
+
+        <!-- Preconnect for performance -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap"
             rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!-- Structured Data for SEO -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "<%= name %>",
+            "jobTitle": "<%= role %>",
+            "worksFor": {
+                "@type": "Organization",
+                "name": "<%= company %>"
+            },
+            "telephone": "<%= mobile %>",
+            "email": "<%= email %>",
+            "address": "<%= address %>",
+            "url": "<%= website %>",
+            "image": "<%= cardImage %>"
+        }
+        </script>
 
         <style>
             :root {
-                --primary: <%=primaryColor %>;
-                --primary-dark: #011d78;
-                --text-dark: #1a1a2e;
-                --text-muted: #6b7280;
-                --bg-light: #f8faff;
-                --border-color: #e5e7eb;
+                --primary: #2344af;
+                --primary-light: #326eb8;
+                --accent: #c41e3a;
             }
 
             * {
-                box-sizing: border-box;
                 margin: 0;
                 padding: 0;
+                box-sizing: border-box;
             }
 
             body {
-                background: linear-gradient(135deg, #e8ecf4 0%, #f8faff 100%);
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-                display: flex;
-                justify-content: center;
+                font-family: 'Be Vietnam Pro', sans-serif;
+                background: #f0f4f8;
                 min-height: 100vh;
-                padding-bottom: 70px;
             }
 
-            .card-container {
-                width: 100%;
-                max-width: 420px;
+            body.dark {
+                background: #0a1628;
+            }
+
+            .container {
+                max-width: 480px;
+                margin: 0 auto;
                 background: white;
                 min-height: 100vh;
-                box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
                 position: relative;
+                box-shadow: 0 0 60px rgba(0, 0, 0, 0.08);
+            }
+
+            body.dark .container {
+                background: #111827;
             }
 
             /* Top Header Bar */
-            .top-header {
-                background: linear-gradient(135deg, #1a3a6e 0%, #1e4d8c 100%);
-                color: white;
-                padding: 12px 20px;
+            .top-bar {
+                background: var(--primary);
+                padding: 12px 16px;
                 display: flex;
-                align-items: center;
                 justify-content: space-between;
+                align-items: center;
                 position: sticky;
                 top: 0;
                 z-index: 100;
             }
 
-            .company-name {
-                font-size: 14px;
-                font-weight: 600;
-                letter-spacing: 0.5px;
-            }
-
-            .header-icons {
-                display: flex;
-                gap: 16px;
-            }
-
-            .header-icons a,
-            .header-icons button {
+            .top-bar-title {
                 color: white;
-                background: none;
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+
+            .top-bar-actions {
+                display: flex;
+                gap: 6px;
+            }
+
+            .top-bar-btn {
+                background: rgba(255, 255, 255, 0.15);
                 border: none;
-                font-size: 18px;
+                color: white;
+                width: 34px;
+                height: 34px;
+                border-radius: 8px;
                 cursor: pointer;
-                opacity: 0.9;
-                transition: opacity 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.2s;
             }
 
-            .header-icons a:hover,
-            .header-icons button:hover {
-                opacity: 1;
+            .top-bar-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
             }
 
-            /* Cover Photo */
-            .cover-section {
+            .top-bar-btn .material-icons {
+                font-size: 20px;
+            }
+
+            /* Hero Section - Like Hoa Phat */
+            .hero-section {
                 position: relative;
-                height: 320px;
+                background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 50%);
+                min-height: 280px;
+                /* Tăng chiều cao lên (cũ là 200px) */
                 overflow: hidden;
             }
 
-            .cover-image {
-                width: 100%;
-                height: 100%;
-                object-fit: <%=imgFit %>;
-                object-position: center <%=imgPos %>%;
+            /* Key Visual Background */
+            .key-visual-bg {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 300px;
+                height: 300px;
+                background-image: url('/public/uploads/company_logo/AT Energy_Key visual.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                opacity: 0.62;
             }
 
-            .cover-overlay {
+            /* Hero Photo - uses background like old version */
+            .hero-photo {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: transparent;
+                background-repeat: no-repeat;
+                z-index: 3;
+            }
+
+
+
+            /* Wave Curve */
+            .wave-curve {
                 position: absolute;
                 bottom: 0;
                 left: 0;
                 right: 0;
-                height: 100px;
-                background: linear-gradient(to top, white, transparent);
+                height: 80px;
+                /* Tăng độ cao sóng lên một chút cho đẹp (cũ là 60px) */
+                z-index: 5;
+                /* QUAN TRỌNG: Số lớn hơn photo-container */
             }
 
-            .company-logo {
-                position: absolute;
-                bottom: 20px;
-                right: 20px;
-                height: 45px;
-                z-index: 10;
-            }
-
-            .company-logo img {
+            .wave-curve svg {
+                width: 100%;
                 height: 100%;
-                width: auto;
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+                display: block;
             }
 
-            /* Profile Card */
-            .profile-card {
-                background: linear-gradient(135deg, #1a3a6e 0%, #1e4d8c 100%);
-                color: white;
-                margin: -20px 16px 20px;
-                border-radius: 20px;
-                padding: 22px;
+            .hero-logo {
+                position: absolute;
+                bottom: 15px;
+                /* Cách đáy */
+                right: 25px;
+                /* Cách lề phải */
+                width: 160px;
+                /* Điều chỉnh kích thước logo */
+                height: auto;
+                z-index: 6;
+                /* Nằm trên cùng nhất */
+            }
+
+            body.dark .logo-section {
+                background: #111827;
+            }
+
+            .logo-section img {
+                height: 40px;
+            }
+
+            /* Card Flip Container */
+            .card-flip-container {
+                perspective: 1000px;
+                margin: 0 10px 24px;
+            }
+
+            .card-flip {
                 position: relative;
-                z-index: 20;
-                box-shadow: 0 8px 24px rgba(26, 58, 110, 0.25);
+                width: 100%;
+                min-height: 190px;
+                transform-style: preserve-3d;
+                transition: transform 0.6s ease;
+            }
+
+            .card-flip-container.flipped .card-flip {
+                transform: rotateY(180deg);
+            }
+
+            .card-front,
+            .card-back {
+                position: absolute;
+                width: 100%;
+                height: 200px;
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+                border-radius: 10px;
+                top: 0;
+                left: 0;
+            }
+
+            .card-front {
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                padding: 28px 24px;
+                color: white;
+                box-shadow: 0 12px 40px rgba(1, 37, 150, 0.3);
+            }
+
+            .card-back {
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                transform: rotateY(180deg);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+                box-shadow: 0 12px 40px rgba(1, 37, 150, 0.3);
             }
 
             .profile-name {
                 font-size: 24px;
                 font-weight: 700;
-                margin-bottom: 4px;
+                margin-bottom: 6px;
             }
 
             .profile-role {
                 font-size: 14px;
+                font-weight: 500;
                 opacity: 0.9;
-                margin-bottom: 2px;
+                margin-bottom: 4px;
             }
 
             .profile-company {
                 font-size: 13px;
-                opacity: 0.8;
-                margin-bottom: 4px;
+                opacity: 0.75;
+                margin-bottom: 20px;
             }
 
-            .profile-address {
-                font-size: 12px;
-                opacity: 0.7;
-                line-height: 1.4;
-            }
-
-            /* Quick Action Buttons */
-            .quick-actions {
+            .profile-actions {
                 display: flex;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            .profile-action {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                transition: all 0.2s;
+                cursor: pointer;
+                border: none;
+            }
+
+            .profile-action.filled {
+                background: white;
+                color: var(--primary);
+            }
+
+            .profile-action.outline {
+                background: transparent;
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                color: white;
+            }
+
+            .profile-action:hover {
+                transform: scale(1.1);
+            }
+
+            .profile-action .material-icons {
+                font-size: 24px;
+            }
+
+            /* QR Back */
+            .qr-wrapper {
+                background: white;
+                padding: 10px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+                height: 100px;
+                width: 100px;
+            }
+
+            .qr-text {
+                color: white;
+                font-size: 14px;
+                font-weight: 500;
+                margin-bottom: 12px;
+            }
+
+            .qr-back-btn {
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .qr-back-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            /* Section */
+            .section {
+                padding: 0px 20px;
+                margin-bottom: 28px;
+            }
+
+            .section-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+
+            .section-bar {
+                width: 4px;
+                height: 20px;
+                background: var(--accent);
+                border-radius: 2px;
+            }
+
+            .section-title {
+                font-size: 15px;
+                font-weight: 700;
+                color: #1e293b;
+            }
+
+            body.dark .section-title {
+                color: #e2e8f0;
+            }
+
+            /* Contact Pills */
+            .contact-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .contact-pill {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+                padding: 14px 18px;
+                border-radius: 10px;
+                color: white;
+                text-decoration: none;
+                transition: all 0.2s;
+            }
+
+            .contact-pill:hover {
+                transform: translateX(6px);
+                box-shadow: 0 6px 25px rgba(1, 37, 150, 0.35);
+            }
+
+            .contact-pill .material-icons {
+                font-size: 20px;
+                opacity: 0.9;
+            }
+
+            .contact-pill-text {
+                flex: 1;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            /* Video */
+            .video-wrapper {
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            }
+
+            .video-wrapper iframe {
+                width: 100%;
+                aspect-ratio: 16/9;
+                border: none;
+                display: block;
+            }
+
+            /* Social */
+            .social-row {
+                display: flex;
+                justify-content: center;
                 gap: 12px;
                 margin-top: 20px;
             }
 
-            .action-btn {
-                width: 48px;
-                height: 48px;
-                border-radius: 50%;
-                background: white;
-                color: var(--primary);
+            .social-btn {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 18px;
-                text-decoration: none;
-                transition: all 0.2s;
-                border: none;
-                cursor: pointer;
-            }
-
-            .action-btn:hover {
-                transform: scale(1.1);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            }
-
-            /* Contact Section */
-            .section {
-                padding: 0 16px;
-                margin-bottom: 20px;
-            }
-
-            .section-title {
-                font-size: 14px;
-                font-weight: 600;
-                color: var(--text-dark);
-                margin-bottom: 12px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid var(--border-color);
-            }
-
-            .contact-list {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .contact-item {
-                display: flex;
-                align-items: center;
-                gap: 14px;
-                background: var(--bg-light);
-                padding: 14px 16px;
-                border-radius: 12px;
-                text-decoration: none;
-                color: var(--text-dark);
-                transition: all 0.2s;
-                border: 1px solid var(--border-color);
-            }
-
-            .contact-item:hover {
-                background: white;
-                border-color: var(--primary);
-                transform: translateX(4px);
-            }
-
-            .contact-icon {
-                width: 36px;
-                height: 36px;
-                border-radius: 10px;
-                background: linear-gradient(135deg, #1a3a6e 0%, #2d5a94 100%);
                 color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
-                flex-shrink: 0;
+                text-decoration: none;
+                transition: all 0.2s;
             }
 
-            .contact-info {
-                flex: 1;
-                min-width: 0;
+            .social-btn:hover {
+                transform: scale(1.1);
             }
 
-            .contact-label {
-                font-size: 11px;
-                color: var(--text-muted);
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
+            .social-btn.fb {
+                background: #1877F2;
             }
 
-            .contact-value {
-                font-size: 14px;
-                font-weight: 500;
-                color: var(--text-dark);
-                word-break: break-word;
+            .social-btn.li {
+                background: #0A66C2;
             }
 
-            /* Video Section */
-            .video-wrapper {
-                position: relative;
-                padding-bottom: 56.25%;
-                height: 0;
-                border-radius: 12px;
-                overflow: hidden;
+            .social-btn.za {
+                background: #0068FF;
+            }
+
+            .social-btn.tt {
                 background: #000;
             }
 
-            .video-wrapper iframe {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                border: none;
-            }
-
             /* Footer */
-            .card-footer {
+            .footer {
                 text-align: center;
-                padding: 20px;
-                color: var(--text-muted);
+                padding: 30px 20px 100px;
+                color: #94a3b8;
                 font-size: 12px;
             }
 
-            .card-footer a {
+            .footer a {
                 color: var(--primary);
-                text-decoration: none;
                 font-weight: 600;
+                text-decoration: none;
             }
 
-            /* Sticky Save Contact Bar */
-            .save-contact-bar {
+            /* Sticky Bottom */
+            .sticky-bottom {
                 position: fixed;
                 bottom: 0;
                 left: 50%;
                 transform: translateX(-50%);
+                max-width: 480px;
                 width: 100%;
-                max-width: 420px;
+                padding: 12px 20px;
                 background: white;
-                padding: 12px 16px;
+                border-top: 1px solid #e2e8f0;
                 display: flex;
                 gap: 12px;
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-                z-index: 1000;
+                z-index: 100;
             }
 
-            .btn-save-contact {
+            body.dark .sticky-bottom {
+                background: #1f2937;
+                border-color: #374151;
+            }
+
+            .save-btn {
                 flex: 1;
-                padding: 14px;
-                background: linear-gradient(135deg, #1a3a6e 0%, #1e4d8c 100%);
-                color: white;
-                border: none;
-                border-radius: 12px;
-                font-size: 15px;
-                font-weight: 600;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                transition: all 0.2s;
-            }
-
-            .btn-save-contact:hover {
-                background: var(--primary-dark);
-            }
-
-            .btn-share {
-                width: 50px;
-                background: var(--bg-light);
-                color: var(--primary);
-                border: 1px solid var(--border-color);
-                border-radius: 12px;
-                font-size: 18px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: all 0.2s;
-            }
-
-            .btn-share:hover {
                 background: var(--primary);
                 color: white;
+                border: none;
+                padding: 16px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .save-btn:hover {
+                background: var(--primary-light);
+                box-shadow: 0 8px 25px rgba(1, 37, 150, 0.3);
+            }
+
+            .share-btn {
+                background: var(--primary);
+                color: white;
+                border: none;
+                width: 52px;
+                height: 52px;
+                border-radius: 12px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            }
+
+            .share-btn:hover {
+                background: var(--primary-light);
+            }
+
+            /* Toast Animations */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(-50%) translateY(10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+            }
+
+            @keyframes fadeOut {
+                from {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+
+                to {
+                    opacity: 0;
+                    transform: translateX(-50%) translateY(-10px);
+                }
+            }
+
+            /* Smooth interactions */
+            html {
+                scroll-behavior: smooth;
+            }
+
+            /* Touch feedback */
+            .contact-item:active,
+            .action-btn:active,
+            .save-btn:active,
+            .share-btn:active {
+                transform: scale(0.97);
+            }
+
+            /* QR Actions */
+            .qr-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                margin-top: 5px;
+            }
+
+            .qr-action-btn {
+                background: none;
+                border: 1px solid #ddd;
+                padding: 5px 16px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 13px;
+                color: #ffffff;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                transition: 0.2s;
+            }
+
+            .qr-action-btn:hover {
+                background: #f8f9fa;
+                border-color: #ccc;
             }
 
             /* QR Modal */
-            .modal-overlay {
+            .qr-modal {
                 position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.6);
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 9999;
                 display: none;
                 align-items: center;
                 justify-content: center;
-                z-index: 2000;
-                padding: 20px;
+                opacity: 0;
+                transition: opacity 0.3s;
             }
 
-            .modal-overlay.active {
+            .qr-modal.show {
                 display: flex;
+                opacity: 1;
             }
 
-            .modal-content {
+            .qr-modal-content {
                 background: white;
+                padding: 30px;
                 border-radius: 20px;
-                padding: 32px;
                 text-align: center;
-                max-width: 320px;
-                width: 100%;
+                max-width: 90%;
+                transform: scale(0.8);
+                transition: transform 0.3s;
             }
 
-            .modal-content h3 {
-                font-size: 18px;
-                color: var(--text-dark);
-                margin-bottom: 16px;
+            .qr-modal.show .qr-modal-content {
+                transform: scale(1);
             }
 
-            #qrcode {
-                display: inline-block;
-                padding: 16px;
-                background: white;
-                border-radius: 12px;
-                border: 1px solid var(--border-color);
-            }
-
-            #qrcode img {
+            #qrcode-large img {
                 display: block;
+                margin: 0 auto;
             }
 
-            .modal-close {
+            .btn-close-modal {
                 margin-top: 20px;
-                padding: 12px 24px;
-                background: var(--bg-light);
-                border: 1px solid var(--border-color);
-                border-radius: 10px;
-                color: var(--text-dark);
-                font-size: 14px;
+                padding: 8px 25px;
+                background: #f1f1f1;
+                border: none;
+                border-radius: 20px;
+                font-weight: 600;
+                color: #333;
                 cursor: pointer;
-            }
-
-            .modal-close:hover {
-                background: var(--border-color);
             }
         </style>
 </head>
 
 <body>
-    <div class="card-container">
-        <!-- Top Header -->
-        <div class="top-header">
-            <span class="company-name">AT ENERGY</span>
-            <div class="header-icons">
-                <button onclick="openQRModal()" title="QR Code"><i class="fas fa-qrcode"></i></button>
-                <button onclick="shareCard()" title="Chia sẻ"><i class="fas fa-share-alt"></i></button>
+    <div class="container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <span class="top-bar-title">AT ENERGY</span>
+            <div class="top-bar-actions">
+                <button class="top-bar-btn" onclick="toggleCardFlip()">
+                    <span class="material-icons">qr_code_2</span>
+                </button>
+                <button class="top-bar-btn" onclick="shareCard()">
+                    <span class="material-icons">share</span>
+                </button>
             </div>
         </div>
 
-        <!-- Cover Photo -->
-        <div class="cover-section">
-            <img src="<%= bcard.Image || '/public/assets/default-cover.jpg' %>" alt="Cover" class="cover-image">
-            <div class="cover-overlay"></div>
-            <div class="company-logo">
-                <img src="/public/assets/AT-Energy-Logo-1024x200.png" alt="AT Energy">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="key-visual-bg"></div>
+
+            <div class="hero-photo" style="
+                background-image: url('<%= bcard.Image || '/public/assets/default-avatar-cutout.png' %>');
+                background-size: <%= imgFit || 'cover' %>;
+                background-position: center <%= imgPos || 50 %>%;
+            "></div>
+
+            <div class="wave-curve">
+                <svg viewBox="0 0 500 60" preserveAspectRatio="none">
+                    <path d="M0,30 Q125,60 250,30 T500,30 L500,60 L0,60 Z" fill="white" />
+                </svg>
             </div>
+
+            <img class="hero-logo" src="/public/assets/AT-Energy-Logo-1024x200.png" alt="AT Energy">
         </div>
 
-        <!-- Profile Card -->
-        <div class="profile-card">
-            <h1 class="profile-name">
-                <%= name %>
-            </h1>
-            <div class="profile-role">
-                <%= role %>
-            </div>
-            <div class="profile-company">
-                <%= company %>
-            </div>
-            <% if(address) { %>
-                <div class="profile-address">
-                    <%= address %>
-                </div>
-                <% } %>
 
-                    <div class="quick-actions">
-                        <a href="tel:<%= mobile %>" class="action-btn" title="Gọi điện"><i class="fas fa-phone"></i></a>
-                        <a href="mailto:<%= email %>" class="action-btn" title="Email"><i
-                                class="fas fa-envelope"></i></a>
-                        <% if(address) { %>
-                            <a href="https://maps.google.com/?q=<%= encodeURIComponent(address) %>" target="_blank"
-                                class="action-btn" title="Bản đồ"><i class="fas fa-location-dot"></i></a>
-                            <% } %>
-                                <button onclick="openQRModal()" class="action-btn" title="QR Code"><i
-                                        class="fas fa-qrcode"></i></button>
+        <!-- Profile Card with Flip -->
+        <div class="card-flip-container" id="cardFlip">
+            <div class="card-flip">
+                <!-- Front: Info -->
+                <div class="card-front">
+                    <div class="profile-name">
+                        <%= name %>
                     </div>
+                    <div class="profile-role">
+                        <%= role %>
+                    </div>
+                    <div class="profile-company">
+                        <%= company %>
+                    </div>
+                    <div class="profile-actions">
+                        <a href="tel:<%= mobile %>" class="profile-action filled">
+                            <span class="material-icons">call</span>
+                        </a>
+                        <a href="mailto:<%= email %>" class="profile-action outline">
+                            <span class="material-icons-outlined">email</span>
+                        </a>
+                        <button class="profile-action outline" onclick="event.stopPropagation(); toggleCardFlip()">
+                            <span class="material-icons">qr_code_2</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Back: QR -->
+                <div class="card-back">
+                    <div class="qr-wrapper">
+                        <div id="qrcode"></div>
+                    </div>
+                    <p class="qr-text">Quét để lưu liên hệ</p>
+                    <div class="qr-actions">
+                        <button class="qr-action-btn" onclick="event.stopPropagation(); toggleCardFlip()">
+                            <span class="material-icons" style="font-size:16px; margin-right:4px">arrow_back</span> Quay
+                            lại
+                        </button>
+                        <button class="qr-action-btn" onclick="event.stopPropagation(); showQRZoom()">
+                            <span class="material-icons" style="font-size:16px; margin-right:4px">zoom_in</span> 180x180
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- QR Zoom Modal -->
+        <div id="qrModal" class="qr-modal" onclick="closeQRZoom()">
+            <div class="qr-modal-content" onclick="event.stopPropagation()">
+                <div id="qrcode-large"></div>
+                <p style="margin-top:15px; color:#666; font-size:14px">Quét để lưu danh bạ</p>
+                <button class="btn-close-modal" onclick="closeQRZoom()">Đóng</button>
+            </div>
+        </div>
+
 
         <!-- Contact Information -->
         <div class="section">
-            <h2 class="section-title">Thông tin liên hệ</h2>
+            <div class="section-header">
+                <div class="section-bar"></div>
+                <span class="section-title">Contact Information</span>
+            </div>
+
             <div class="contact-list">
                 <% if(mobile) { %>
-                    <a href="tel:<%= mobile %>" class="contact-item">
-                        <div class="contact-icon"><i class="fas fa-mobile-alt"></i></div>
-                        <div class="contact-info">
-                            <div class="contact-label">Di động</div>
-                            <div class="contact-value">
-                                <%= mobile %>
-                            </div>
-                        </div>
+                    <a href="tel:<%= mobile %>" class="contact-pill">
+                        <span class="material-icons">call</span>
+                        <span class="contact-pill-text">
+                            <%= mobile.replace(/^0/, '' ) %>
+                        </span>
                     </a>
                     <% } %>
 
                         <% if(hotline) { %>
-                            <a href="tel:<%= hotline %>" class="contact-item">
-                                <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                                <div class="contact-info">
-                                    <div class="contact-label">Hotline / Văn phòng</div>
-                                    <div class="contact-value">
-                                        <%= hotline %>
-                                    </div>
-                                </div>
+                            <a href="tel:<%= hotline %>" class="contact-pill">
+                                <span class="material-icons">call</span>
+                                <span class="contact-pill-text">
+                                    <%= hotline.replace(/^0/, '' ) %>
+                                </span>
                             </a>
                             <% } %>
 
-                                <a href="mailto:<%= email %>" class="contact-item">
-                                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                                    <div class="contact-info">
-                                        <div class="contact-label">Email</div>
-                                        <div class="contact-value">
-                                            <%= email %>
-                                        </div>
-                                    </div>
+                                <a href="mailto:<%= email %>" class="contact-pill">
+                                    <span class="material-icons-outlined">email</span>
+                                    <span class="contact-pill-text">
+                                        <%= email %>
+                                    </span>
                                 </a>
 
                                 <% if(address) { %>
                                     <a href="https://maps.google.com/?q=<%= encodeURIComponent(address) %>"
-                                        target="_blank" class="contact-item">
-                                        <div class="contact-icon"><i class="fas fa-location-dot"></i></div>
-                                        <div class="contact-info">
-                                            <div class="contact-label">Địa chỉ</div>
-                                            <div class="contact-value">
-                                                <%= address %>
-                                            </div>
-                                        </div>
+                                        target="_blank" class="contact-pill">
+                                        <span class="material-icons">location_on</span>
+                                        <span class="contact-pill-text">
+                                            <%= address %>
+                                        </span>
                                     </a>
                                     <% } %>
 
                                         <% if(website) { %>
-                                            <a href="<%= website %>" target="_blank" class="contact-item">
-                                                <div class="contact-icon"><i class="fas fa-globe"></i></div>
-                                                <div class="contact-info">
-                                                    <div class="contact-label">Website</div>
-                                                    <div class="contact-value">
-                                                        <%= website %>
-                                                    </div>
-                                                </div>
+                                            <a href="<%= website %>" target="_blank" class="contact-pill">
+                                                <span class="material-icons">language</span>
+                                                <span class="contact-pill-text">
+                                                    <%= website %>
+                                                </span>
                                             </a>
                                             <% } %>
             </div>
+
+            <!-- Social -->
+            <% if(social.facebook || social.linkedin || social.zalo || social.tiktok) { %>
+                <div class="social-row">
+                    <% if(social.facebook) { %>
+                        <a href="<%= social.facebook %>" target="_blank" class="social-btn fb">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                            </svg>
+                        </a>
+                        <% } %>
+                            <% if(social.linkedin) { %>
+                                <a href="<%= social.linkedin %>" target="_blank" class="social-btn li">
+                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                    </svg>
+                                </a>
+                                <% } %>
+                                    <% if(social.zalo) { %>
+                                        <a href="<%= social.zalo %>" target="_blank" class="social-btn za">
+                                            <span style="font-weight:800;font-size:11px">Zalo</span>
+                                        </a>
+                                        <% } %>
+                                            <% if(social.tiktok) { %>
+                                                <a href="<%= social.tiktok %>" target="_blank" class="social-btn tt">
+                                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path
+                                                            d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+                                                    </svg>
+                                                </a>
+                                                <% } %>
+                </div>
+                <% } %>
         </div>
 
-        <!-- Video Section -->
+        <!-- Video -->
         <% if(videoUrl) { %>
             <div class="section">
-                <h2 class="section-title">Video</h2>
+                <div class="section-header">
+                    <div class="section-bar"></div>
+                    <span class="section-title">Video</span>
+                </div>
                 <div class="video-wrapper">
                     <iframe src="<%= videoUrl %>" allowfullscreen></iframe>
                 </div>
@@ -548,99 +882,144 @@
             <% } %>
 
                 <!-- Footer -->
-                <div class="card-footer">
-                    Tạo danh thiếp số với <a href="/">AT Digital Card</a>
+                <div class="footer" style="padding-bottom: 80px;">
+                    Powered by <a href="/">AT Digital Card</a>
                 </div>
     </div>
 
-    <!-- Sticky Save Contact Bar -->
-    <div class="save-contact-bar">
-        <button class="btn-save-contact" onclick="saveContact()">
-            <i class="fas fa-user-plus"></i>
-            LƯU LIÊN HỆ
+    <!-- Sticky Bottom - OUTSIDE container for proper fixed positioning -->
+    <div class="sticky-bottom">
+        <button class="save-btn" onclick="saveContact()">
+            <span class="material-icons">person_add</span>
+            SAVE CONTACT
         </button>
-        <button class="btn-share" onclick="shareCard()">
-            <i class="fas fa-share-alt"></i>
+        <button class="share-btn" onclick="shareCard()">
+            <span class="material-icons">share</span>
         </button>
     </div>
 
-    <!-- QR Modal -->
-    <div class="modal-overlay" id="qrModal">
-        <div class="modal-content">
-            <h3>Quét để lưu liên hệ</h3>
-            <div id="qrcode"></div>
-            <button class="modal-close" onclick="closeQRModal()">Đóng</button>
-        </div>
-    </div>
-
-    <!-- Scripts -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
     <script>
-        // Generate QR Code
-        const currentUrl = window.location.href;
-        new QRCode(document.getElementById("qrcode"), {
-            text: currentUrl,
-            width: 180,
-            height: 180,
-            colorDark: "#012596",
-            colorLight: "#ffffff"
+        document.addEventListener('DOMContentLoaded', function () {
+            new QRCode(document.getElementById("qrcode"), {
+                text: window.location.href,
+                width: 80,
+                height: 80,
+                colorDark: "#012596",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
         });
 
-        // QR Modal
-        function openQRModal() {
-            document.getElementById('qrModal').classList.add('active');
+        function toggleCardFlip() {
+            document.getElementById('cardFlip').classList.toggle('flipped');
         }
 
-        function closeQRModal() {
-            document.getElementById('qrModal').classList.remove('active');
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = '<%= name.replace(/\\s+/g, "_") %>_QR.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
         }
 
-        document.getElementById('qrModal').addEventListener('click', function (e) {
-            if (e.target === this) closeQRModal();
-        });
-
-        // Save Contact (vCard)
         function saveContact() {
             const vcard = `BEGIN:VCARD
 VERSION:3.0
+N:<%= name.split(' ').slice(-1)[0] %>;<%= name.split(' ').slice(0, -1).join(' ') %>;;;
 FN:<%= name %>
 ORG:<%= company %>
 TITLE:<%= role %>
+PHOTO;VALUE=URI:<%= cardImage %>
 TEL;TYPE=CELL:<%= mobile %>
 <% if(hotline) { %>TEL;TYPE=WORK:<%= hotline %>
 <% } %>EMAIL:<%= email %>
-<% if(address) { %>ADR;TYPE=WORK:;;<%= address %>
+<% if(address) { %>ADR;TYPE=WORK:;;<%= address %>;;;;
 <% } %><% if(website) { %>URL:<%= website %>
-<% } %>END:VCARD`;
+<% } %>NOTE:Digital Card: ${window.location.href}<% if(social.facebook) { %>\\nFacebook: <%= social.facebook %><% } %><% if(social.linkedin) { %>\\nLinkedIn: <%= social.linkedin %><% } %><% if(social.zalo) { %>\\nZalo: <%= social.zalo %><% } %>
+END:VCARD`;
 
             const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = '<%= name.replace(/\s+/g, "_") %>.vcf';
-            document.body.appendChild(link);
+            link.download = '<%= name.replace(/\\s+/g, "_") %>.vcf';
             link.click();
-            document.body.removeChild(link);
             URL.revokeObjectURL(url);
+            showToast('Đã tải danh bạ!');
         }
 
-        // Share
         async function shareCard() {
+            const shareData = {
+                title: '<%= name %> - AT Digital Card',
+                text: 'Xem danh thiếp số của <%= name %>',
+                url: window.location.href
+            };
+
+            // Try native share first (mobile)
             if (navigator.share) {
                 try {
-                    await navigator.share({
-                        title: '<%= name %> - AT Digital Card',
-                        text: 'Xem danh thiếp số của <%= name %>',
-                        url: window.location.href
-                    });
+                    await navigator.share(shareData);
+                    return; // Success, exit
                 } catch (err) {
-                    console.log('Share cancelled');
+                    console.log('Share cancelled or failed:', err);
                 }
-            } else {
-                // Fallback: copy to clipboard
-                navigator.clipboard.writeText(window.location.href);
-                alert('Đã copy link vào clipboard!');
             }
+
+            // Fallback: copy to clipboard
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                showToast('Đã copy link!');
+            } catch (err) {
+                // Final fallback: manual copy
+                const textArea = document.createElement('textarea');
+                textArea.value = window.location.href;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('Đã copy link!');
+            }
+        }
+
+        function showQRZoom() {
+            const modal = document.getElementById('qrModal');
+            const container = document.getElementById('qrcode-large');
+
+            // Generate if empty
+            if (container.innerHTML === '') {
+                new QRCode(container, {
+                    text: window.location.href,
+                    width: 180,
+                    height: 180,
+                    colorDark: "#012596",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeQRZoom() {
+            const modal = document.getElementById('qrModal');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.innerText = message;
+            toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;animation:fadeIn 0.3s';
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
         }
     </script>
 </body>

@@ -12,10 +12,22 @@ const businessCardSchema = new mongoose.Schema({
       fieldValue: String, // User-entered value for the field
     },
   ],
-  Image:String,
-  bgImg:String,
-  bgColor:String,
-});
+  Image: String,
+  bgImg: String,
+  bgColor: String,
+  // Analytics
+  viewCount: { type: Number, default: 0 },
+  lastViewedAt: { type: Date },
+  // Social Media Links
+  socialLinks: {
+    facebook: String,
+    linkedin: String,
+    zalo: String,
+    tiktok: String,
+    instagram: String,
+    youtube: String,
+  },
+}, { timestamps: true });
 
 const BusinessCard = mongoose.model('BusinessCard', businessCardSchema);
 module.exports = BusinessCard;
