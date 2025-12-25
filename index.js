@@ -1093,22 +1093,47 @@ app.post('/edit-user/:userId', async (req, res) => {
     user.email = req.body.email;
     user.number = req.body.number;
 
+    const previousSelectedItems = user.selectedItems.map(item => (item.toObject ? item.toObject() : item));
+
     // Clear existing selectedItems array
     user.selectedItems = [];
 
     // Get the number of selectedItems from the hidden field
-    const selectedItemsCount = parseInt(req.body.selectedItemsCount, 10);
+    const parsedSelectedItemsCount = parseInt(req.body.selectedItemsCount, 10);
+    const selectedItemsCount = Number.isNaN(parsedSelectedItemsCount)
+      ? previousSelectedItems.length
+      : parsedSelectedItemsCount;
 
     // Iterate over form fields to reconstruct selectedItems array
     for (let index = 0; index < selectedItemsCount; index++) {
+      const existingItem = previousSelectedItems[index];
+      const planValue =
+        req.body[`subscriptionPlan_${index}`] ||
+        existingItem?.subscriptionPlan?.plan;
+      const cardTypeValue =
+        req.body[`cardType_${index}`] || existingItem?.cardType;
+      const templateValue =
+        req.body[`template_${index}`] || existingItem?.template;
+      const occasionValue =
+        req.body[`occasion_${index}`] || existingItem?.occasion || 'DefaultOccasion';
+
+      if (!planValue || !cardTypeValue || !templateValue) {
+        return res
+          .status(400)
+          .send(
+            `Occasion, card type, template, and subscription plan are required for selected item #${index + 1}`
+          );
+      }
+
       user.selectedItems.push({
-        occasion: req.body[`occasion_${index}`],
-        cardType: new ObjectId(req.body[`cardType_${index}`]),
-        template: new ObjectId(req.body[`template_${index}`]),
+        occasion: occasionValue,
+        cardType: new ObjectId(cardTypeValue),
+        template: new ObjectId(templateValue),
         subscriptionPlan: {
-          plan: new ObjectId(req.body[`subscriptionPlan_${index}`]),
+          plan: new ObjectId(planValue),
+          expiresAt: existingItem?.subscriptionPlan?.expiresAt,
         },
-        // Add other fields if needed
+        businessCard: existingItem?.businessCard,
       });
     }
 
@@ -1346,8 +1371,19 @@ app.post('/businesscard/:userId', upload.fields([
     const savedBusinessCard = await BusinessCard.findOneAndUpdate(filter, update, options);
 
     // Cập nhật selectedItems trong User model để đồng bộ
+    const subscriptionPlanEntry = plan
+      ? { plan }
+      : null;
+
     await User.findByIdAndUpdate(userId, {
-      $set: { selectedItems: [{ businessCard: savedBusinessCard._id, subscriptionPlan: plan }] }
+      $set: {
+        selectedItems: [
+          {
+            businessCard: savedBusinessCard._id,
+            subscriptionPlan: subscriptionPlanEntry,
+          },
+        ],
+      },
     });
 
     // Sau khi lưu xong, thông báo link cho user
@@ -2040,6 +2076,42 @@ app.post('/edit-employee/:employeeId', upload.single('photo'), async (req, res) 
 
     const employeeUser = await User.findOne({ employeeId: employee._id });
     if (employeeUser) {
+      const normalizeSelectedItems = (items) => {
+        const normalized = [];
+        for (const item of items) {
+          const raw = item.toObject ? item.toObject() : item;
+          let planValue = null;
+          if (raw.subscriptionPlan) {
+            if (raw.subscriptionPlan.plan) {
+              planValue = raw.subscriptionPlan.plan;
+            } else if (typeof raw.subscriptionPlan === 'string') {
+              planValue = raw.subscriptionPlan;
+            } else if (mongoose.isValidObjectId(raw.subscriptionPlan)) {
+              planValue = raw.subscriptionPlan;
+            } else if (raw.subscriptionPlan._id) {
+              planValue = raw.subscriptionPlan._id;
+            }
+          }
+
+          if (!planValue) {
+            continue; // drop invalid entries
+          }
+
+          normalized.push({
+            ...raw,
+            subscriptionPlan: {
+              plan: planValue,
+              expiresAt: raw.subscriptionPlan?.expiresAt,
+            },
+          });
+        }
+        return normalized;
+      };
+
+      if (employeeUser.selectedItems && employeeUser.selectedItems.length > 0) {
+        employeeUser.selectedItems = normalizeSelectedItems(employeeUser.selectedItems);
+      }
+
       const newUsername = await generateEmployeeUsername(employee.name, employee.email, employeeUser._id);
       employeeUser.username = newUsername;
       if (employeeUser.email !== employee.email) {
